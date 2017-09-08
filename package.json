@@ -1,0 +1,44 @@
+{
+  "name": "remp",
+  "version": "1.0.0",
+  "description": "React Mentoring Program",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dubbha/remp.git"
+  },
+  "keywords": [
+    "react",
+    "redux",
+    "jest",
+    "ssr"
+  ],
+  "author": "Alex Dubovyk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dubbha/remp/issues"
+  },
+  "homepage": "https://github.com/dubbha/remp#readme",
+  "dependencies": {
+    "axios": "^0.16.2",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.4",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "redux-devtools-extension": "^2.13.2",
+    "redux-form": "^7.0.4",
+    "reselect": "^3.0.1"
+  },
+  "devDependencies": {
+    "enzyme": "^2.9.1",
+    "enzyme-to-json": "^1.5.1",
+    "jest": "^21.0.2"
+  }
+}
