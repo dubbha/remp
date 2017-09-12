@@ -1,5 +1,5 @@
 module.exports = {
-  modulePaths: ['src'],
+  modulePaths: ['src/js'],
   roots: ['test'],
   moduleFileExtensions: [
     'js',

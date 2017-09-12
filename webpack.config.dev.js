@@ -12,7 +12,7 @@ module.exports = {
     bundle: [
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:3001/',
-      './src/index.js',
+      './src/js/index.js',
     ]
   },
   output: {

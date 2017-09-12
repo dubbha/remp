@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
 import App from './App';
 
-require('./style.sass');
+require('../css/app.sass');
 
 const renderApp = () => {
   render(

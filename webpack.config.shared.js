@@ -6,7 +6,7 @@ const extensions = ['.js', '.json', '.jsx'];
 const rules = [
   {
     test: /\.jsx?$/,
-    include: path.resolve(__dirname, 'src'),
+    include: path.resolve(__dirname, 'src/js'),
     use: [
       'babel-loader',
       'eslint-loader',
@@ -35,9 +35,9 @@ const rules = [
 
 const plugins = [
   new HtmlWebpackPlugin({
-    template: 'src/index.html',
+    template: 'src/html/index.html',
     inject: true,
-    favicon: 'src/assets/favicon.ico',
+    favicon: 'src/img/favicon.ico',
   }),
 ];
 
