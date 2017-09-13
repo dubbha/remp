@@ -13,7 +13,7 @@ const rules = [
     ],
   },
   {
-    test: /\.(ttf|eot|woff|svg|png)$/,
+    test: /\.(ttf|eot|woff|svg|png|jpg)$/,
     use: [
       {
         loader: 'file-loader',

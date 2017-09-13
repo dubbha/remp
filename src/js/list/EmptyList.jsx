@@ -1,9 +1,8 @@
 import React from 'react';
-import EmptyList from './EmptyList';
 
 const List = () => (
   <section>
-    <EmptyList />
+    No Films Found
   </section>
 );
 
