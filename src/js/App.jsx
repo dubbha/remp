@@ -5,7 +5,7 @@ import Search from './search';
 import Film from './film';
 
 const App = () => (
-  <div>
+  <div className="app">
     { true && <Search /> }
     { false && <Film /> }
     <List />
