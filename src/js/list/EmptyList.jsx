@@ -1,9 +1,9 @@
 import React from 'react';
 
 const List = () => (
-  <section>
-    No Films Found
-  </section>
+  <div className="list__message">
+    No films found
+  </div>
 );
 
 export default List;

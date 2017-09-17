@@ -2,7 +2,7 @@
     "parser": "babel-eslint",
     "extends": [
       "airbnb-base",
-      "plugin:react/recommended"
+      "plugin:react/all"
     ],
     "plugins": [
       "react"
@@ -17,11 +17,14 @@
       "sourceType": "module"
     },
     "rules": {
-      "linebreak-style": 0,
-      "comma-dangle": 0,
-      "eol-last": 0,
-      "no-underscore-dangle": 0,
-      "func-names": 0,
+      "indent": [2, 2],
+      "react/jsx-indent": [2, 2],
+      "react/jsx-indent-props": [2, 2],
+      "react/jsx-no-literals": 0,
+      "react/jsx-sort-props": 0,
+      "react/sort-prop-types": 0,
+      "react/require-optimization": 0,
+      "react/no-set-state": 0,
       "import/extensions": 0,
       "import/no-unresolved": 0,
       "import/no-extraneous-dependencies": 0
