@@ -21,8 +21,10 @@ export default class App extends Component {
     this.setState({ results: mockSearchResults });
   }
 
-  handleSelectFilm = id =>
+  handleSelectFilm = (id) => {
     this.setState({ film: this.state.results.find(item => item.show_id === id) });
+    window.scrollTo(0, 0);
+  }
 
   handleClearFilm = () =>
     this.setState({ film: null });

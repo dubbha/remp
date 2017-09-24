@@ -1,12 +1,17 @@
 {
-    "presets": [
-        ["es2015", { "modules": false }],
-        "es2016",
-        "react"
-    ],
-    "plugins": [
-        "react-hot-loader/babel",
-        "transform-class-properties",
-        "transform-object-rest-spread"
-    ]
+  "presets": [
+    ["env", {
+      "targets": {
+        "browsers": ["> 1%"]
+      },
+      "useBuiltIns": true,
+      "debug": true
+    }],
+    "react"
+  ],
+  "plugins": [
+    "react-hot-loader/babel",
+    "transform-class-properties",
+    "transform-object-rest-spread"
+  ]
 }

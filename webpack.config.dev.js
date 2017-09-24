@@ -10,10 +10,11 @@ module.exports = {
   },
   entry: {
     bundle: [
+      'babel-polyfill',
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:3001/',
       './src/js/index.js',
-    ]
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -33,5 +34,5 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     ...sharedConfig.plugins,
-  ]
+  ],
 };
