@@ -1,15 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import SearchSortByLink from './SearchSortByLink';
 import './style.sass';
 
-const SearchResult = ({ results }) => (
+const SearchResult = ({
+  results,
+  sortBy,
+  onSortByChange,
+  sortByParams,
+}) => (
   results.length > 0 && (
     <div className="searchResult">
       <span className="searchResult__line">{`${results.length} movies found`}</span>
       <span className="searchResult__line">
         Sort by
-        <a className="searchResult__link">release date</a>
-        <a className="searchResult__link searchResult__link_active">rating</a>
+        {
+          sortByParams.map(item => (
+            <SearchSortByLink
+              key={item}
+              text={item}
+              active={sortBy === item}
+              onClickWithText={onSortByChange}
+            />
+          ))
+        }
       </span>
     </div>
   )
@@ -32,6 +46,9 @@ SearchResult.propTypes = {
     show_cast: PropTypes.string,
     show_id: PropTypes.number,
   })),
+  sortBy: PropTypes.string.isRequired,
+  onSortByChange: PropTypes.func.isRequired,
+  sortByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default SearchResult;
