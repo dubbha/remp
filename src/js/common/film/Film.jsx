@@ -4,11 +4,11 @@ import Logo from '../logo';
 import FilmButton from './FilmButton';
 import './style.sass';
 
-const Film = ({ film, onClearFilm }) => (
+const Film = ({ film, onSearchClick }) => (
   <header className="film">
     <div className="film__headerContainer">
       <Logo />
-      <FilmButton onClearFilm={onClearFilm} />
+      <FilmButton onSearchClick={onSearchClick} />
     </div>
     <div className="film__infoSection">
       <div className="film__poster">
@@ -43,7 +43,7 @@ Film.propTypes = {
     show_cast: PropTypes.string,
     show_id: PropTypes.number,
   }).isRequired,
-  onClearFilm: PropTypes.func.isRequired,
+  onSearchClick: PropTypes.func.isRequired,
 };
 
 export default Film;

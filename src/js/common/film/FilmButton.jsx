@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SearchButton = ({ onClearFilm }) => (
+const SearchButton = ({ onSearchClick }) => (
   <button
     className="film__button"
-    onClick={onClearFilm}
+    onClick={onSearchClick}
   >
     Search
   </button>
 );
 
 SearchButton.propTypes = {
-  onClearFilm: PropTypes.func.isRequired,
+  onSearchClick: PropTypes.func.isRequired,
 };
 
 export default SearchButton;

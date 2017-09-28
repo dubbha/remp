@@ -4,7 +4,10 @@ const sharedConfig = require('./webpack.config.shared');
 
 module.exports = {
   entry: {
-    bundle: './src/js/index.js',
+    bundle: [
+      'babel-polyfill',
+      './src/js/index.js',
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),

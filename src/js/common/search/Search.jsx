@@ -4,7 +4,14 @@ import Logo from '../logo';
 import SearchToolbar from './searchToolbar';
 import './style.sass';
 
-const Search = ({ onSearch }) => (
+const Search = ({
+  query,
+  onSearch,
+  onQueryChange,
+  searchBy,
+  onSearchByChange,
+  searchByParams,
+}) => (
   <header className="search">
     <Logo />
     <div className="search__header">find your movie</div>
@@ -17,17 +24,31 @@ const Search = ({ onSearch }) => (
           type="text"
           className="search__input"
           name="search"
-          style={{ backgroundImage: '../../img/enter.svg' }}
+          value={query}
+          onChange={onQueryChange}
         />
         <div className="search__icon" />
       </div>
-      <SearchToolbar />
+      <SearchToolbar
+        searchBy={searchBy}
+        onSearchByChange={onSearchByChange}
+        searchByParams={searchByParams}
+      />
     </form>
   </header>
 );
 
+Search.defaultProps = {
+  query: '',
+};
+
 Search.propTypes = {
+  query: PropTypes.string,
   onSearch: PropTypes.func.isRequired,
+  onQueryChange: PropTypes.func.isRequired,
+  searchBy: PropTypes.string.isRequired,
+  onSearchByChange: PropTypes.func.isRequired,
+  searchByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default Search;

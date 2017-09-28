@@ -6,14 +6,17 @@ module.exports = {
   devServer: {
     port: 3001,
     hot: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      disableDotRule: true,
+    },
   },
   entry: {
     bundle: [
+      'babel-polyfill',
       'react-hot-loader/patch',
       'webpack-dev-server/client?http://localhost:3001/',
       './src/js/index.js',
-    ]
+    ],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -33,5 +36,5 @@ module.exports = {
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
     ...sharedConfig.plugins,
-  ]
+  ],
 };
