@@ -35,7 +35,10 @@ export default class FilmPage extends Component {
     window.scrollTo(0, 0);
     history.push(`/film/${title}`);
 
-    this.setState({ film: this.state.results.find(item => item.show_title === title) });
+    this.setState({
+      results: mockSearchResults.filter(item => item.show_title !== title),
+      film: this.state.results.find(item => item.show_title === title),
+    });
   }
 
   handleSearchClick = () => {

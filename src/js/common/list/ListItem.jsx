@@ -21,11 +21,18 @@ export default class ListItem extends Component {
     return (
       <div className="list__item">
         <div className="list__container">
-          <img
-            src={item.poster}
-            className="list__image"
+          <a
+            role="link"
+            tabIndex={0}
+            className="list__link"
             onClick={this.handleSelectFilm}
-          />
+          >
+            <img
+              src={item.poster}
+              alt={item.show_title}
+              className="list__image"
+            />
+          </a>
           <div className="list__titleYearBlock">
             <span className="list__title">{item.show_title}</span>
             <span className="list__year">{item.release_year}</span>

@@ -1,9 +1,11 @@
 module.exports = {
   modulePaths: ['src/js'],
   roots: ['test'],
-  moduleFileExtensions: [
-    'js',
-    'jsx',
+  moduleFileExtensions: ['js', 'jsx'],
+  collectCoverageFrom: ['src/js/**/*.{js,jsx}'],
+  setupFiles: [
+    'raf/polyfill',
+    '<rootDir>/enzyme.config.js',
   ],
   coverageThreshold: {
     global: {
@@ -11,6 +13,6 @@ module.exports = {
       functions: 80,
       lines: 80,
       statements: 80,
-    }
-  }
+    },
+  },
 };

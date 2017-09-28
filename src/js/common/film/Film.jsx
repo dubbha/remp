@@ -15,6 +15,7 @@ const Film = ({ film, onSearchClick }) => (
         <img
           className="film__image"
           src={film.poster}
+          alt={film.show_title}
         />
       </div>
       <div className="film__details">

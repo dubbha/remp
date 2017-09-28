@@ -19,6 +19,8 @@ export default class SearchSortByLink extends Component {
 
     return (
       <a
+        role="link"
+        tabIndex={0}
         className={classNames(
           'searchResult__link',
           { searchResult__link_active: active },
