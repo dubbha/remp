@@ -9,6 +9,15 @@ module.exports = {
     historyApiFallback: {
       disableDotRule: true,
     },
+    proxy: {
+      '/api': {
+        target: 'http://netflixroulette.net',
+        pathRewrite: { '^/api': '/api/api.php' },
+        secure: false,
+        changeOrigin: true,
+        logLevel: 'debug',
+      },
+    },
   },
   entry: {
     bundle: [

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import axios from 'axios';
 import Search from '../common/search';
 import Result from '../common/result';
 import List from '../common/list';
@@ -18,6 +19,12 @@ const sortByApiMap = {
 };
 
 const sortFnFabric = sortBy => (a, b) => b[sortByApiMap[sortBy]] - a[sortByApiMap[sortBy]];
+
+const search = (query, searchBy) => {
+  axios.get(`/api?${searchBy}=${query}`)
+    .then(res => console.log(res))
+    .catch(err => console.error(err));
+};
 
 export default class SearchPage extends Component {
   static propTypes = {
@@ -51,6 +58,7 @@ export default class SearchPage extends Component {
     if (this.state.query) {
       history.push(`/search/${this.state.query}`);
       this.setState({ results: mockSearchResults.sort(sortFnFabric(this.state.sortBy)) });
+      search(this.state.query, this.state.searchBy);
     } else {
       history.push('/search');
       this.setState({ results: [] });
