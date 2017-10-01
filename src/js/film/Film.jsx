@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Film from '../common/film';
+import FilmHeader from '../common/filmHeader';
 import Result from '../common/result';
 import List from '../common/list';
 import Footer from '../common/footer';
 import filmPropShape from '../common/utils/propShapes';
-import { selectors } from '../searchPage';
+import * as selectors from './film.selectors';
+import {
+  selectors as searchSelectors,
+  actions as searchActions,
+} from '../search';
 
-export class FilmPage extends Component {
+export class Film extends Component {
+  static defaultProps = {
+    film: null,
+    results: null,
+  };
+
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -18,9 +27,14 @@ export class FilmPage extends Component {
     history: PropTypes.shape({
       push: PropTypes.func,
     }).isRequired,
-    results: PropTypes.arrayOf(filmPropShape).isRequired,
+    film: filmPropShape,
+    results: PropTypes.arrayOf(filmPropShape),
+    search: PropTypes.func.isRequired,
+    setSearchBy: PropTypes.func.isRequired,
+    setFilm: PropTypes.func.isRequired,
   };
 
+  /*
   constructor(props) {
     super(props);
 
@@ -34,39 +48,59 @@ export class FilmPage extends Component {
       film: results.find(item => item.show_title === title),
     };
   }
+  */
 
-  handleSelectFilm = (title) => {
-    const { history, results } = this.props;
+  componentWillMount() {
+    const {
+      match: { params },
+      film,
+      results,
+      search,
+    } = this.props;
+
+    if (!film || !results) {
+      search(params.query, 'title');
+    }
+  }
+
+  handleSelectFilm = (film) => {
+    const { history, setFilm } = this.props;
 
     window.scrollTo(0, 0);
-    history.push(`/film/${title}`);
+    history.push(`/film/${film.title}`);
+    setFilm(film);
 
+    /*
     this.setState({
       results: results.filter(item => item.show_title !== title),
       film: results.find(item => item.show_title === title),
     });
+    */
   }
 
   handleSearchClick = () => {
-    const { history } = this.props;
+    const { history, setSearchBy } = this.props;
 
     window.scrollTo(0, 0);
+    setSearchBy('director');
     history.push(`/search/${this.state.film.director}`);
   }
 
   render() {
+    const { film, results } = this.props;
+
     return (
       <div className="app__container">
-        <Film
-          film={this.state.film}
+        <FilmHeader
+          film={film}
           onSearchClick={this.handleSearchClick}
         />
         <Result
-          film={this.state.film}
-          results={this.state.results}
+          film={film}
+          results={results}
         />
         <List
-          results={this.state.results}
+          results={results}
           onSelectFilm={this.handleSelectFilm}
         />
         <Footer />
@@ -76,9 +110,17 @@ export class FilmPage extends Component {
 }
 
 const mapStateToProps = state => ({
-  results: selectors.resultsSelector(state),
+  film: selectors.filmSelector,
+  results: searchSelectors.resultsSelector(state),
+  filteredResults: selectors.filteredResultsSelector(state),
 });
+
+const mapDispatchToProps = {
+  setSearchBy: searchActions.setSearchBy,
+  search: searchActions.search,
+};
 
 export default connect(
   mapStateToProps,
-)(FilmPage);
+  mapDispatchToProps,
+)(Film);

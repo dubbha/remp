@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import Search from '../common/search';
+import SearchHeader from '../common/searchHeader';
 import Result from '../common/result';
 import List from '../common/list';
 import Footer from '../common/footer';
@@ -9,7 +9,7 @@ import filmPropShape from '../common/utils/propShapes';
 import * as actions from './search.actions';
 import * as selectors from './search.selectors';
 
-export class SearchPage extends Component {
+export class Search extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -31,6 +31,7 @@ export class SearchPage extends Component {
     clearResults: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
     setSortBy: PropTypes.func.isRequired,
+    isLoading: PropTypes.bool.isRequired,
   };
 
   componentWillMount() {
@@ -100,11 +101,12 @@ export class SearchPage extends Component {
       sortBy,
       searchByParams,
       sortByParams,
+      isLoading,
     } = this.props;
 
     return (
       <div className="app__container">
-        <Search
+        <SearchHeader
           query={query}
           onQueryChange={this.handleQueryChange}
           onSearch={this.handleSearch}
@@ -121,6 +123,7 @@ export class SearchPage extends Component {
         <List
           results={results}
           onSelectFilm={this.handleSelectFilm}
+          isLoading={isLoading}
         />
         <Footer />
       </div>
@@ -135,6 +138,7 @@ const mapStateToProps = state => ({
   sortBy: selectors.sortBySelector(state),
   searchByParams: selectors.searchByParamsSelector(state),
   sortByParams: selectors.sortByParamsSelector(state),
+  isLoading: selectors.isLoadingSelector(state),
 });
 
 const mapDispatchToProps = {
@@ -149,4 +153,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(SearchPage);
+)(Search);

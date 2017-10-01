@@ -31,3 +31,8 @@ export const sortByParamsSelector = createSelector(
   searchSelector,
   ({ sortByParams }) => sortByParams,
 );
+
+export const isLoadingSelector = createSelector(
+  searchSelector,
+  ({ isLoading }) => isLoading,
+);

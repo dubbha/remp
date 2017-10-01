@@ -1,14 +1,14 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import SearchPage from '../searchPage';
-import FilmPage from '../filmPage';
+import Search from '../search';
+import Film from '../film';
 import './style.sass';
 
 const App = () => (
   <div className="app">
     <Switch>
-      <Route path="/search/:query?" component={SearchPage} />
-      <Route path="/film/:title" component={FilmPage} />
+      <Route path="/search/:query?" component={Search} />
+      <Route path="/film/:title" component={Film} />
       <Redirect from="/" to="/search" />
     </Switch>
   </div>

@@ -1,10 +1,5 @@
 import { actionTypes } from './search.actions';
-
-const searchByParams = ['title', 'director'];
-const sortByParams = ['release date', 'rating'];
-
-const defaultSearchBy = searchByParams[1];
-const defaultSortBy = sortByParams[0];
+import { searchByParams, sortByParams, defaultSearchBy, defaultSortBy } from './search.config';
 
 const initialState = {
   query: '',
@@ -13,6 +8,7 @@ const initialState = {
   sortByParams,
   searchBy: defaultSearchBy,
   sortBy: defaultSortBy,
+  isLoading: false,
 };
 
 const searchReducer = (state = initialState, action) => {
@@ -41,6 +37,11 @@ const searchReducer = (state = initialState, action) => {
       return {
         ...state,
         sortBy: action.sortBy,
+      };
+    case actionTypes.SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
       };
     default:
       return state;
