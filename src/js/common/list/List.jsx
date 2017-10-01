@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import filmPropShape from '../utils/propShapes';
 import EmptyList from './EmptyList';
 import ListItem from './ListItem';
 import './style.sass';
@@ -30,19 +31,6 @@ List.defaultProps = {
   results: [],
   film: {},
 };
-
-const filmPropShape = PropTypes.shape({
-  poster: PropTypes.string,
-  title: PropTypes.string,
-  rating: PropTypes.string,
-  category: PropTypes.string,
-  release_year: PropTypes.string,
-  runtime: PropTypes.string,
-  summary: PropTypes.string,
-  director: PropTypes.string,
-  show_cast: PropTypes.string,
-  show_id: PropTypes.number,
-});
 
 List.propTypes = {
   results: PropTypes.arrayOf(filmPropShape),

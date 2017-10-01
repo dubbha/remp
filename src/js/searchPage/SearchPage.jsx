@@ -1,32 +1,15 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import Search from '../common/search';
 import Result from '../common/result';
 import List from '../common/list';
 import Footer from '../common/footer';
-import mockSearchResults from '../App/mockSearchResults';
+import filmPropShape from '../common/utils/propShapes';
+import * as actions from './search.actions';
+import * as selectors from './search.selectors';
 
-const searchByParams = ['title', 'director'];
-const sortByParams = ['release date', 'rating'];
-
-const defaultSearchBy = searchByParams[1];
-const defaultSortBy = sortByParams[0];
-
-const sortByApiMap = {
-  'release date': 'release_year',
-  rating: 'rating',
-};
-
-const sortFnFabric = sortBy => (a, b) => b[sortByApiMap[sortBy]] - a[sortByApiMap[sortBy]];
-
-const search = (query, searchBy) => {
-  axios.get(`/api?${searchBy}=${query}`)
-    .then(res => console.log(res))
-    .catch(err => console.error(err));
-};
-
-export default class SearchPage extends Component {
+export class SearchPage extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
@@ -36,37 +19,59 @@ export default class SearchPage extends Component {
     history: PropTypes.shape({
       push: PropTypes.func,
     }).isRequired,
+    query: PropTypes.string.isRequired,
+    results: PropTypes.arrayOf(filmPropShape).isRequired,
+    searchBy: PropTypes.string.isRequired,
+    sortBy: PropTypes.string.isRequired,
+    searchByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
+    sortByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
+    search: PropTypes.func.isRequired,
+    setQuery: PropTypes.func.isRequired,
+    setResults: PropTypes.func.isRequired,
+    clearResults: PropTypes.func.isRequired,
+    setSearchBy: PropTypes.func.isRequired,
+    setSortBy: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-
-    const { match: { params: { query } } } = props;
-
-    this.state = {
+  componentWillMount() {
+    const {
+      match: { params },
       query,
-      results: query ? mockSearchResults.sort(sortFnFabric(defaultSortBy)) : [],
-      searchBy: defaultSearchBy,
-      sortBy: defaultSortBy,
-    };
+      searchBy,
+      sortBy,
+      search,
+      setQuery,
+    } = this.props;
+
+    if (params.query && params.query !== query) {
+      setQuery(params.query);
+      search(params.query, searchBy, sortBy);
+    }
   }
 
   handleSearch = (e) => {
-    const { history } = this.props;
-    e.preventDefault();
+    const {
+      history,
+      query,
+      searchBy,
+      sortBy,
+      search,
+      clearResults,
+    } = this.props;
 
-    if (this.state.query) {
-      history.push(`/search/${this.state.query}`);
-      this.setState({ results: mockSearchResults.sort(sortFnFabric(this.state.sortBy)) });
-      search(this.state.query, this.state.searchBy);
+    e.preventDefault(); // submitting the form to support search on enter
+
+    if (query) {
+      history.push(`/search/${query}`);
+      search(query, searchBy, sortBy);
     } else {
       history.push('/search');
-      this.setState({ results: [] });
+      clearResults();
     }
   }
 
   handleQueryChange = (e) => {
-    this.setState({ query: e.target.value });
+    this.props.setQuery(e.target.value);
   }
 
   handleSelectFilm = (title) => {
@@ -77,37 +82,44 @@ export default class SearchPage extends Component {
   }
 
   handleSearchByChange = (searchBy) => {
-    this.setState({ searchBy });
+    this.props.setSearchBy(searchBy);
   }
 
   handleSortByChange = (sortBy) => {
-    const sorted = this.state.results.sort(sortFnFabric(sortBy));
+    const { setSortBy, results, setResults } = this.props;
 
-    this.setState({
-      sortBy,
-      results: sorted,
-    });
+    setSortBy(sortBy);
+    setResults(results, sortBy);
   }
 
   render() {
+    const {
+      query,
+      results,
+      searchBy,
+      sortBy,
+      searchByParams,
+      sortByParams,
+    } = this.props;
+
     return (
       <div className="app__container">
         <Search
-          query={this.state.query}
+          query={query}
           onQueryChange={this.handleQueryChange}
           onSearch={this.handleSearch}
-          searchBy={this.state.searchBy}
+          searchBy={searchBy}
           onSearchByChange={this.handleSearchByChange}
           searchByParams={searchByParams}
         />
         <Result
-          results={this.state.results}
-          sortBy={this.state.sortBy}
+          results={results}
+          sortBy={sortBy}
           onSortByChange={this.handleSortByChange}
           sortByParams={sortByParams}
         />
         <List
-          results={this.state.results}
+          results={results}
           onSelectFilm={this.handleSelectFilm}
         />
         <Footer />
@@ -115,3 +127,26 @@ export default class SearchPage extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  query: selectors.querySelector(state),
+  results: selectors.resultsSelector(state),
+  searchBy: selectors.searchBySelector(state),
+  sortBy: selectors.sortBySelector(state),
+  searchByParams: selectors.searchByParamsSelector(state),
+  sortByParams: selectors.sortByParamsSelector(state),
+});
+
+const mapDispatchToProps = {
+  search: actions.search,
+  setQuery: actions.setQuery,
+  setResults: actions.setResults,
+  clearResults: actions.clearResults,
+  setSearchBy: actions.setSearchBy,
+  setSortBy: actions.setSortBy,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SearchPage);
