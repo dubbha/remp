@@ -2,6 +2,7 @@ import { actionTypes } from './film.actions';
 
 const initialState = {
   film: null,
+  isLoading: false,
 };
 
 const filmReducer = (state = initialState, action) => {
@@ -10,6 +11,11 @@ const filmReducer = (state = initialState, action) => {
       return {
         ...state,
         film: action.film,
+      };
+    case actionTypes.SET_IS_LOADING:
+      return {
+        ...state,
+        isLoading: action.isLoading,
       };
     default:
       return state;

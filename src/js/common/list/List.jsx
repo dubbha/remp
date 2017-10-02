@@ -16,7 +16,7 @@ const filtered = (list, film) => {
 const List = ({ results, film, onSelectFilm, isLoading }) => (
   <section className="list">
     { isLoading && <Spinner /> }
-    { !isLoading && (
+    { !isLoading && results && (
       results.length > 0
         ? filtered(results, film).map(item => (
           <ListItem

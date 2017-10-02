@@ -1,38 +1,38 @@
 import { createSelector } from 'reselect';
 
-const subStateSelector = state => state.search;
+const searchStateSelector = state => state.search;
 
 export const querySelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ query }) => query,
 );
 
 export const resultsSelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ results }) => results,
 );
 
 export const searchBySelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ searchBy }) => searchBy,
 );
 
 export const sortBySelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ sortBy }) => sortBy,
 );
 
 export const searchByParamsSelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ searchByParams }) => searchByParams,
 );
 
 export const sortByParamsSelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ sortByParams }) => sortByParams,
 );
 
 export const isLoadingSelector = createSelector(
-  subStateSelector,
+  searchStateSelector,
   ({ isLoading }) => isLoading,
 );

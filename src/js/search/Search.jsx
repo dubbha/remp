@@ -8,6 +8,7 @@ import Footer from '../common/footer';
 import filmPropShape from '../common/utils/propShapes';
 import * as actions from './search.actions';
 import * as selectors from './search.selectors';
+import { actions as filmActions } from '../film';
 
 export class Search extends Component {
   static propTypes = {
@@ -25,13 +26,14 @@ export class Search extends Component {
     sortBy: PropTypes.string.isRequired,
     searchByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
     sortByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
+    isLoading: PropTypes.bool.isRequired,
     search: PropTypes.func.isRequired,
     setQuery: PropTypes.func.isRequired,
     setResults: PropTypes.func.isRequired,
     clearResults: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
     setSortBy: PropTypes.func.isRequired,
-    isLoading: PropTypes.bool.isRequired,
+    setFilm: PropTypes.func.isRequired,
   };
 
   componentWillMount() {
@@ -75,11 +77,12 @@ export class Search extends Component {
     this.props.setQuery(e.target.value);
   }
 
-  handleSelectFilm = (title) => {
-    const { history } = this.props;
+  handleSelectFilm = (film) => {
+    const { history, setFilm } = this.props;
 
+    setFilm(film);
     window.scrollTo(0, 0);
-    history.push(`/film/${title}`);
+    history.push(`/film/${film.show_title}`);
   }
 
   handleSearchByChange = (searchBy) => {
@@ -148,6 +151,7 @@ const mapDispatchToProps = {
   clearResults: actions.clearResults,
   setSearchBy: actions.setSearchBy,
   setSortBy: actions.setSortBy,
+  setFilm: filmActions.setFilm,
 };
 
 export default connect(

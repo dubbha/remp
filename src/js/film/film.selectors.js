@@ -1,14 +1,20 @@
 import { createSelector } from 'reselect';
-import { selectors as searchSelectors } from '../search';
+import * as searchSelectors from '../search/search.selectors';
 
-const subStateSelector = state => state.film;
+const filmStateSelector = state => state.film;
 
 export const filmSelector = createSelector(
-  subStateSelector,
+  filmStateSelector,
   ({ film }) => film,
+);
+
+export const isLoadingSelector = createSelector(
+  filmStateSelector,
+  ({ isLoading }) => isLoading,
 );
 
 export const filteredResultsSelector = createSelector(
   [searchSelectors.resultsSelector, filmSelector],
-  (results, film) => results.filter(item => item.show_title !== film.title),
+  (results, film) =>
+    results && film && results.filter(item => item.show_title !== film.show_title),
 );

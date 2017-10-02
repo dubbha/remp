@@ -12,7 +12,7 @@ export default class ListItem extends Component {
   handleSelectFilm = () => {
     const { onSelectFilm, item } = this.props;
 
-    onSelectFilm(item.show_title);
+    onSelectFilm(item);
   }
 
   render() {
