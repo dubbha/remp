@@ -58,13 +58,6 @@ export class Film extends Component {
     setFilm(film);
     window.scrollTo(0, 0);
     history.push(`/film/${film.show_title}`);
-
-    /*
-    this.setState({
-      results: results.filter(item => item.show_title !== title),
-      film: results.find(item => item.show_title === title),
-    });
-    */
   }
 
   handleSearchClick = () => {
