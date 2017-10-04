@@ -34,7 +34,14 @@ export default class ListItem extends Component {
             />
           </a>
           <div className="list__titleYearBlock">
-            <span className="list__title">{item.show_title}</span>
+            <a
+              role="link"
+              tabIndex={-1}
+              className="list__link list__title"
+              onClick={this.handleSelectFilm}
+            >
+              {item.show_title}
+            </a>
             <span className="list__year">{item.release_year}</span>
           </div>
           <div className="list__category">{item.category}</div>

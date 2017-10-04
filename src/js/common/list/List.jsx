@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import filmPropShape from '../utils/propShapes';
 import EmptyList from './EmptyList';
 import ListItem from './ListItem';
 import Spinner from './Spinner';
+import ErrorBoundary from '../errorBoundary';
+import filmPropShape from '../utils/propShapes';
 import './style.sass';
 
 const filtered = (list, film) => {
@@ -15,17 +16,19 @@ const filtered = (list, film) => {
 
 const List = ({ results, film, onSelectFilm, isLoading }) => (
   <section className="list">
-    { isLoading && <Spinner /> }
-    { !isLoading && results && (
-      results.length > 0
-        ? filtered(results, film).map(item => (
-          <ListItem
-            item={item}
-            key={item.show_id}
-            onSelectFilm={onSelectFilm}
-          />))
-        : <EmptyList />
-    )}
+    <ErrorBoundary>
+      { isLoading && <Spinner /> }
+      { !isLoading && results && (
+        results.length > 0
+          ? filtered(results, film).map(item => (
+            <ListItem
+              item={item}
+              key={item.show_id}
+              onSelectFilm={onSelectFilm}
+            />))
+          : <EmptyList />
+      )}
+    </ErrorBoundary>
   </section>
 );
 
