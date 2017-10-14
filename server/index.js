@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const proxy = require('http-proxy-middleware');
 
 const app = express();
 
@@ -10,6 +11,14 @@ app.use((req, res, next) => { // https://enable-cors.org/server_expressjs.html
 });
 
 app.use(express.static(path.join(__dirname, '../dist')));
+
+app.use('/api', proxy({ // API proxy
+  target: 'http://netflixroulette.net',
+  pathRewrite: { '^/api': '/api/api.php' },
+  secure: false,
+  changeOrigin: true,
+  logLevel: 'debug',
+}));
 
 app.get('*', (req, res) => { // SPA default route
   res.sendFile(path.join(__dirname, '../dist/index.html'));

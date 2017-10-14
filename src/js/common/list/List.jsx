@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import EmptyList from './EmptyList';
 import ListItem from './ListItem';
+import Spinner from './Spinner';
+import ErrorBoundary from '../errorBoundary';
+import filmPropShape from '../utils/propShapes';
 import './style.sass';
 
 const filtered = (list, film) => {
@@ -11,18 +14,21 @@ const filtered = (list, film) => {
   return list;
 };
 
-const List = ({ results, film, onSelectFilm }) => (
+const List = ({ results, film, onSelectFilm, isLoading }) => (
   <section className="list">
-    {
-      results.length > 0
-        ? filtered(results, film).map(item => (
-          <ListItem
-            item={item}
-            key={item.show_id}
-            onSelectFilm={onSelectFilm}
-          />))
-        : <EmptyList />
-    }
+    <ErrorBoundary>
+      { isLoading && <Spinner /> }
+      { !isLoading && results && (
+        results.length > 0
+          ? filtered(results, film).map(item => (
+            <ListItem
+              item={item}
+              key={item.show_id}
+              onSelectFilm={onSelectFilm}
+            />))
+          : <EmptyList />
+      )}
+    </ErrorBoundary>
   </section>
 );
 
@@ -31,23 +37,11 @@ List.defaultProps = {
   film: {},
 };
 
-const filmPropShape = PropTypes.shape({
-  poster: PropTypes.string,
-  title: PropTypes.string,
-  rating: PropTypes.string,
-  category: PropTypes.string,
-  release_year: PropTypes.string,
-  runtime: PropTypes.string,
-  summary: PropTypes.string,
-  director: PropTypes.string,
-  show_cast: PropTypes.string,
-  show_id: PropTypes.number,
-});
-
 List.propTypes = {
   results: PropTypes.arrayOf(filmPropShape),
   film: filmPropShape,
   onSelectFilm: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 export default List;

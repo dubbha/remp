@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import SearchResult from './SearchResult';
 import FilmResult from './FilmResult';
+import ErrorBoundary from '../errorBoundary';
 import filmPropShape from '../utils/propShapes';
 import './style.sass';
 
@@ -13,20 +14,22 @@ const Result = ({
   sortByParams,
 }) => (
   <div className="result">
-    {
-      film
-        ? (
-          <FilmResult film={film} />
-        )
-        : (
-          <SearchResult
-            results={results}
-            sortBy={sortBy}
-            onSortByChange={onSortByChange}
-            sortByParams={sortByParams}
-          />
-        )
-    }
+    <ErrorBoundary>
+      {
+        film
+          ? (
+            <FilmResult film={film} />
+          )
+          : (
+            <SearchResult
+              results={results}
+              sortBy={sortBy}
+              onSortByChange={onSortByChange}
+              sortByParams={sortByParams}
+            />
+          )
+      }
+    </ErrorBoundary>
   </div>
 );
 

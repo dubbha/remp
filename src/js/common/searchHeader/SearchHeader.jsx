@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Logo from '../logo';
 import SearchToolbar from './searchToolbar';
+import ErrorBoundary from '../errorBoundary';
 import './style.sass';
 
 const Search = ({
@@ -13,28 +14,30 @@ const Search = ({
   searchByParams,
 }) => (
   <header className="search">
-    <Logo />
-    <div className="search__header">find your movie</div>
-    <form
-      autoComplete="off"
-      onSubmit={onSearch}
-    >
-      <div className="search__container">
-        <input
-          type="text"
-          className="search__input"
-          name="search"
-          value={query}
-          onChange={onQueryChange}
+    <ErrorBoundary>
+      <Logo />
+      <div className="search__header">find your movie</div>
+      <form
+        autoComplete="off"
+        onSubmit={onSearch}
+      >
+        <div className="search__container">
+          <input
+            type="text"
+            className="search__input"
+            name="search"
+            value={query}
+            onChange={onQueryChange}
+          />
+          <div className="search__icon" />
+        </div>
+        <SearchToolbar
+          searchBy={searchBy}
+          onSearchByChange={onSearchByChange}
+          searchByParams={searchByParams}
         />
-        <div className="search__icon" />
-      </div>
-      <SearchToolbar
-        searchBy={searchBy}
-        onSearchByChange={onSearchByChange}
-        searchByParams={searchByParams}
-      />
-    </form>
+      </form>
+    </ErrorBoundary>
   </header>
 );
 

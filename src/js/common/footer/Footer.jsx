@@ -1,10 +1,13 @@
 import React from 'react';
 import Logo from '../logo';
+import ErrorBoundary from '../errorBoundary';
 import './style.sass';
 
 const Footer = () => (
   <footer className="footer">
-    <Logo />
+    <ErrorBoundary>
+      <Logo />
+    </ErrorBoundary>
   </footer>
 );
 

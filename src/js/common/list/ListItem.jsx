@@ -12,7 +12,7 @@ export default class ListItem extends Component {
   handleSelectFilm = () => {
     const { onSelectFilm, item } = this.props;
 
-    onSelectFilm(item.show_title);
+    onSelectFilm(item);
   }
 
   render() {
@@ -21,13 +21,27 @@ export default class ListItem extends Component {
     return (
       <div className="list__item">
         <div className="list__container">
-          <img
-            src={item.poster}
-            className="list__image"
+          <a
+            role="link"
+            tabIndex={0}
+            className="list__link"
             onClick={this.handleSelectFilm}
-          />
+          >
+            <img
+              src={item.poster}
+              alt={item.show_title}
+              className="list__image"
+            />
+          </a>
           <div className="list__titleYearBlock">
-            <span className="list__title">{item.show_title}</span>
+            <a
+              role="link"
+              tabIndex={-1}
+              className="list__link list__title"
+              onClick={this.handleSelectFilm}
+            >
+              {item.show_title}
+            </a>
             <span className="list__year">{item.release_year}</span>
           </div>
           <div className="list__category">{item.category}</div>
