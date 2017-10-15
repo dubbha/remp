@@ -3,7 +3,7 @@ import './style.sass';
 
 const Logo = () => (
   <div className="logo">
-    netflixroulette
+    themoviedb
   </div>
 );
 

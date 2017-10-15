@@ -1,10 +1,12 @@
 import axios from 'axios';
-import { defaultSearchBy, defaultSortBy, sortFnFabric } from './search.config';
+import { apiUrl, apiKey } from '../common/config/api.config';
+import { defaultSortBy, sortFnFabric } from './search.config';
 
 export const actionTypes = {
   SET_QUERY: 'SET_QUERY',
   SET_RESULTS: 'SET_RESULTS',
   CLEAR_RESULTS: 'CLEAR_RESULTS',
+  SET_RESULT_DETAILS: 'SET_RESULT_DETAILS',
   SET_SEARCH_BY: 'SET_SEARCH_BY',
   SET_SORT_BY: 'SET_SORT_BY',
   SET_IS_LOADING: 'SET_IS_LOADING',
@@ -24,6 +26,12 @@ export const clearResults = () => ({
   type: actionTypes.CLEAR_RESULTS,
 });
 
+export const setResultDetails = (id, details) => ({
+  type: actionTypes.SET_RESULT_DETAILS,
+  id,
+  details,
+});
+
 export const setSearchBy = searchBy => ({
   type: actionTypes.SET_SEARCH_BY,
   searchBy,
@@ -39,12 +47,63 @@ export const setIsLoading = isLoading => ({
   isLoading,
 });
 
-export const search = (query, searchBy = defaultSearchBy, sortBy = defaultSortBy) => (dispatch) => {
+export const searchByDirector = (query, sortBy = defaultSortBy) => (dispatch) => {
   dispatch(setIsLoading(true));
-  return axios.get('/api', { params: { [searchBy]: query } })
+
+  return axios.get(`${apiUrl}search/person`,
+    {
+      params: {
+        query,
+        api_key: apiKey,
+      },
+    })
     .then((res) => {
-      dispatch(setResults(res.data, sortBy));
+      if (res.data && res.data.results && res.data.results.length) {
+        axios.get(`${apiUrl}person/${res.data.results[0].id}`,
+          {
+            params: {
+              append_to_response: 'movie_credits',
+              api_key: apiKey,
+            },
+          })
+          .then((res2) => {
+            if (res2.data && res2.data.movie_credits && res2.data.movie_credits.crew) {
+              const films = res2.data.movie_credits.crew
+                .filter(i => i.job === 'Director')
+                .filter(i => !!i.title && !!i.release_date && !!i.poster_path)
+                .map(i => ({ ...i, director: query }));
+
+              dispatch(setResults(films, sortBy));
+              dispatch(setIsLoading(false));
+              return films;
+            }
+            return null;
+          });
+      }
+    })
+    .catch(() => {
+      dispatch(clearResults());
       dispatch(setIsLoading(false));
+    });
+};
+
+export const searchByTitle = (query, sortBy = defaultSortBy) => (dispatch) => {
+  dispatch(setIsLoading(true));
+
+  return axios.get(`${apiUrl}search/movie`,
+    {
+      params: {
+        query,
+        api_key: apiKey,
+      },
+    })
+    .then((res) => {
+      if (res.data && res.data.results) {
+        const films = res.data.results
+          .filter(i => !!i.title && !!i.release_date && !!i.poster_path);
+        dispatch(setResults(films, sortBy));
+        dispatch(setIsLoading(false));
+      }
     })
     .catch(() => {
       dispatch(clearResults());

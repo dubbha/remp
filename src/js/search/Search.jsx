@@ -21,13 +21,14 @@ export class Search extends Component {
       push: PropTypes.func,
     }).isRequired,
     query: PropTypes.string.isRequired,
-    results: PropTypes.arrayOf(filmPropShape).isRequired,
+    results: PropTypes.arrayOf(PropTypes.shape(filmPropShape)).isRequired,
     searchBy: PropTypes.string.isRequired,
     sortBy: PropTypes.string.isRequired,
     searchByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
     sortByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
     isLoading: PropTypes.bool.isRequired,
-    search: PropTypes.func.isRequired,
+    searchByTitle: PropTypes.func.isRequired,
+    searchByDirector: PropTypes.func.isRequired,
     setQuery: PropTypes.func.isRequired,
     setResults: PropTypes.func.isRequired,
     clearResults: PropTypes.func.isRequired,
@@ -42,13 +43,18 @@ export class Search extends Component {
       query,
       searchBy,
       sortBy,
-      search,
+      searchByTitle,
+      searchByDirector,
       setQuery,
     } = this.props;
 
     if (params.query && params.query !== query) {
       setQuery(params.query);
-      search(params.query, searchBy, sortBy);
+      if (searchBy === 'director') {
+        searchByDirector(params.query, sortBy);
+      } else {
+        searchByTitle(params.query, sortBy);
+      }
     }
   }
 
@@ -58,7 +64,8 @@ export class Search extends Component {
       query,
       searchBy,
       sortBy,
-      search,
+      searchByTitle,
+      searchByDirector,
       clearResults,
     } = this.props;
 
@@ -66,7 +73,11 @@ export class Search extends Component {
 
     if (query) {
       history.push(`/search/${query}`);
-      search(query, searchBy, sortBy);
+      if (searchBy === 'director') {
+        searchByDirector(query, sortBy);
+      } else {
+        searchByTitle(query, sortBy);
+      }
     } else {
       history.push('/search');
       clearResults();
@@ -82,7 +93,7 @@ export class Search extends Component {
 
     setFilm(film);
     window.scrollTo(0, 0);
-    history.push(`/film/${film.show_title}`);
+    history.push(`/film/${film.title}`);
   }
 
   handleSearchByChange = (searchBy) => {
@@ -145,7 +156,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  search: actions.search,
+  searchByTitle: actions.searchByTitle,
+  searchByDirector: actions.searchByDirector,
   setQuery: actions.setQuery,
   setResults: actions.setResults,
   clearResults: actions.clearResults,

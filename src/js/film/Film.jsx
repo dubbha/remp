@@ -26,12 +26,13 @@ export class Film extends Component {
     history: PropTypes.shape({
       push: PropTypes.func,
     }).isRequired,
-    film: filmPropShape,
-    filteredResults: PropTypes.arrayOf(filmPropShape),
+    film: PropTypes.shape(filmPropShape),
+    filteredResults: PropTypes.arrayOf(PropTypes.shape(filmPropShape)),
     getFilm: PropTypes.func.isRequired,
-    search: PropTypes.func.isRequired,
+    getFilmDetails: PropTypes.func.isRequired,
+    searchByDirector: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
-    setFilm: PropTypes.func.isRequired,
+    selectFilm: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     searchIsLoading: PropTypes.bool.isRequired,
   };
@@ -42,30 +43,41 @@ export class Film extends Component {
       film,
       filteredResults,
       getFilm,
-      search,
+      getFilmDetails,
+      searchByDirector,
     } = this.props;
 
     if (!film) {
       getFilm(params.title);
-    } else if (film && filteredResults && filteredResults.length === 0) {
-      search(film.director, 'director');
+    } else {
+      if (!film.runtime || !film.cast || !film.director) {
+        getFilmDetails(film);
+      }
+      if (filteredResults && filteredResults.length === 0 && film.director) {
+        searchByDirector(film.director);
+      }
     }
   }
 
   handleSelectFilm = (film) => {
-    const { history, setFilm } = this.props;
+    const { history, selectFilm } = this.props;
 
-    setFilm(film);
+    selectFilm(film);
     window.scrollTo(0, 0);
-    history.push(`/film/${film.show_title}`);
+    history.push(`/film/${film.title}`);
   }
 
   handleSearchClick = () => {
     const { history, setSearchBy, film } = this.props;
 
     window.scrollTo(0, 0);
-    setSearchBy('director');
-    history.push(`/search/${film.director.split(',')[0]}`);
+
+    if (film.director) {
+      setSearchBy('director');
+      history.push(`/search/${film.director}`);
+    } else {
+      history.push('/search');
+    }
   }
 
   render() {
@@ -104,9 +116,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  setFilm: actions.setFilm,
+  selectFilm: actions.selectFilm,
   getFilm: actions.getFilm,
-  search: searchActions.search,
+  getFilmDetails: actions.getFilmDetails,
+  searchByDirector: searchActions.searchByDirector,
   setSearchBy: searchActions.setSearchBy,
 };
 

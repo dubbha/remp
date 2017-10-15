@@ -28,6 +28,12 @@ const searchReducer = (state = initialState, action) => {
         ...state,
         results: [],
       };
+    case actionTypes.SET_RESULT_DETAILS:
+      return {
+        ...state,
+        results: state.results
+          .map(i => (i.id === action.id ? { ...i, ...action.details } : i)),
+      };
     case actionTypes.SET_SEARCH_BY:
       return {
         ...state,

@@ -16,5 +16,5 @@ export const isLoadingSelector = createSelector(
 export const filteredResultsSelector = createSelector(
   [searchSelectors.resultsSelector, filmSelector],
   (results, film) =>
-    results && film && results.filter(item => item.show_title !== film.show_title),
+    results && film && results.filter(item => item.title !== film.title),
 );

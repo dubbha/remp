@@ -3,6 +3,11 @@ import PropTypes from 'prop-types';
 import Logo from '../logo';
 import FilmButton from './FilmButton';
 import ErrorBoundary from '../errorBoundary';
+import filmPropShape from '../utils/propShapes';
+import { imgUrl } from '../config/api.config';
+import parseYear from '../utils/parseYear';
+import mapGenres from '../utils/mapGenres';
+import displayCast from '../utils/displayCast';
 import './style.sass';
 
 const Film = ({ film, onSearchClick }) => (
@@ -16,18 +21,18 @@ const Film = ({ film, onSearchClick }) => (
         <div className="film__poster">
           <img
             className="film__image"
-            src={film.poster}
-            alt={film.show_title}
+            src={`${imgUrl}${film.poster_path}`}
+            alt={film.title}
           />
         </div>
         <div className="film__details">
-          <div className="film__title">{film.show_title}<div className="film__rating">{film.rating}</div></div>
-          <div className="film__category">{film.category}</div>
-          <div className="film__year">{film.release_year}</div>
-          <div className="film__runtime">{film.runtime}</div>
-          <div className="film__summary">{film.summary}</div>
-          <div className="film__director">Director: {film.director}</div>
-          <div className="film__cast">Cast: {film.show_cast}</div>
+          <div className="film__title">{film.title}<div className="film__rating">{film.vote_average}</div></div>
+          <div className="film__category">{mapGenres(film.genre_ids)}</div>
+          <div className="film__year">{parseYear(film.release_date)}</div>
+          <div className="film__runtime">{film.runtime && `${film.runtime}  min`}</div>
+          <div className="film__summary">{film.overview}</div>
+          <div className="film__director">{film.director && `Director: ${film.director}`}</div>
+          <div className="film__cast">{displayCast(film.cast)}</div>
         </div>
       </div>
     </ErrorBoundary>
@@ -35,18 +40,7 @@ const Film = ({ film, onSearchClick }) => (
 );
 
 Film.propTypes = {
-  film: PropTypes.shape({
-    poster: PropTypes.string,
-    title: PropTypes.string,
-    rating: PropTypes.string,
-    category: PropTypes.string,
-    release_year: PropTypes.string,
-    runtime: PropTypes.string,
-    summary: PropTypes.string,
-    director: PropTypes.string,
-    show_cast: PropTypes.string,
-    show_id: PropTypes.number,
-  }).isRequired,
+  film: PropTypes.shape(filmPropShape).isRequired,
   onSearchClick: PropTypes.func.isRequired,
 };
 
