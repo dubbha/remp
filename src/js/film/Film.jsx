@@ -32,7 +32,6 @@ export class Film extends Component {
     getFilmDetails: PropTypes.func.isRequired,
     searchByDirector: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
-    selectFilm: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     searchIsLoading: PropTypes.bool.isRequired,
   };
@@ -47,8 +46,10 @@ export class Film extends Component {
       searchByDirector,
     } = this.props;
 
+    const title = decodeURIComponent(params.title);
+
     if (!film) {
-      getFilm(params.title);
+      getFilm(title);
     } else {
       if (!film.runtime || !film.cast || !film.director) {
         getFilmDetails(film);
@@ -59,12 +60,25 @@ export class Film extends Component {
     }
   }
 
-  handleSelectFilm = (film) => {
-    const { history, selectFilm } = this.props;
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.match.params.title !== this.props.match.params.title) {
+      const film = nextProps.film;
+      const title = decodeURIComponent(nextProps.match.params.title);
+      const { getFilm, getFilmDetails } = this.props;
 
-    selectFilm(film);
+      if (!film) {
+        getFilm(title);
+      } else if (!film.runtime || !film.cast || !film.director) {
+        getFilmDetails(film);
+      }
+    }
+  }
+
+  handleSelectFilm = (film) => {
+    const { history } = this.props;
+
     window.scrollTo(0, 0);
-    history.push(`/film/${film.title}`);
+    history.push(`/film/${encodeURIComponent(film.title)}`);
   }
 
   handleSearchClick = () => {
@@ -74,7 +88,7 @@ export class Film extends Component {
 
     if (film.director) {
       setSearchBy('director');
-      history.push(`/search/${film.director}`);
+      history.push(`/search/${encodeURIComponent(film.director)}`);
     } else {
       history.push('/search');
     }
@@ -108,15 +122,14 @@ export class Film extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  film: selectors.filmSelector(state),
-  filteredResults: selectors.filteredResultsSelector(state),
+const mapStateToProps = (state, props) => ({
+  film: selectors.filmSelector(state, props),
+  filteredResults: selectors.filteredResultsSelector(state, props),
   isLoading: selectors.isLoadingSelector(state),
   searchIsLoading: searchSelectors.isLoadingSelector(state),
 });
 
 const mapDispatchToProps = {
-  selectFilm: actions.selectFilm,
   getFilm: actions.getFilm,
   getFilmDetails: actions.getFilmDetails,
   searchByDirector: searchActions.searchByDirector,

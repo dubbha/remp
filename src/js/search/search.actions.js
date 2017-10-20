@@ -17,7 +17,7 @@ export const setQuery = query => ({
   query,
 });
 
-export const setResults = (results, sortBy) => ({
+export const setResults = (results, sortBy = defaultSortBy) => ({
   type: actionTypes.SET_RESULTS,
   results: Array.isArray(results) ? results.sort(sortFnFabric(sortBy)) : [results],
 });
@@ -59,7 +59,7 @@ export const searchByDirector = (query, sortBy = defaultSortBy) => (dispatch) =>
     })
     .then((res) => {
       if (res.data && res.data.results && res.data.results.length) {
-        axios.get(`${apiUrl}person/${res.data.results[0].id}`,
+        return axios.get(`${apiUrl}person/${res.data.results[0].id}`,
           {
             params: {
               append_to_response: 'movie_credits',
@@ -73,13 +73,12 @@ export const searchByDirector = (query, sortBy = defaultSortBy) => (dispatch) =>
                 .filter(i => !!i.title && !!i.release_date && !!i.poster_path)
                 .map(i => ({ ...i, director: query }));
 
-              dispatch(setResults(films, sortBy));
               dispatch(setIsLoading(false));
-              return films;
+              dispatch(setResults(films, sortBy));
             }
-            return null;
           });
       }
+      return Promise.reject(res);
     })
     .catch(() => {
       dispatch(clearResults());

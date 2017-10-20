@@ -3,14 +3,8 @@ import { apiUrl, apiKey } from '../common/config/api.config';
 import * as searchActions from '../search/search.actions';
 
 export const actionTypes = {
-  SET_FILM: 'SET_FILM',
   SET_IS_LOADING: 'SET_IS_LOADING',
 };
-
-export const setFilm = film => ({
-  type: actionTypes.SET_FILM,
-  film,
-});
 
 export const setIsLoading = isLoading => ({
   type: actionTypes.SET_IS_LOADING,
@@ -30,7 +24,7 @@ export const getFilm = query => (dispatch) => {
     .then((res) => {
       if (res.data && res.data.results && res.data.results.length) {
         const film = res.data.results[0];
-        axios.get(`${apiUrl}movie/${film.id}`,
+        return axios.get(`${apiUrl}movie/${film.id}`,
           {
             params: {
               query,
@@ -39,27 +33,28 @@ export const getFilm = query => (dispatch) => {
             },
           })
           .then((res2) => {
-            if (res2.data && res2.data.credits && res2.data.credits.crew) {
+            dispatch(setIsLoading(false)); // film is ready to be displayed without extra details
+
+            if (res2.data && res2.data.credits) {
+              const runtime = res2.data.runtime;
+              const cast = res2.data.credits.cast;
+
               const directorArr = res2.data.credits.crew.filter(i => i.job === 'Director');
 
-              if (directorArr.length) { // some movies have no director
-                film.director = directorArr[0].name;
+              if (directorArr.length) {
+                const director = directorArr[0].name;
+                dispatch(searchActions.searchByDirector(director))
+                  .then(() => {
+                    dispatch(searchActions.setResultDetails(film.id, { runtime, cast, director }));
+                  });
+              } else { // no director to search by, this film is the only film in the list
+                dispatch(searchActions.setResults([film]));
+                dispatch(searchActions.setResultDetails(film.id, { runtime, cast }));
               }
-
-              film.runtime = res2.data.runtime;
-              film.cast = res2.data.credits.cast;
-
-              dispatch(setFilm(film));
-              dispatch(setIsLoading(false));
-
-              if (film.director) {
-                dispatch(searchActions.searchByDirector(film.director));
-              }
-
-              dispatch(searchActions.setResultDetails(film.id, { film }));
             }
           });
       }
+      return Promise.reject(res);
     });
 };
 
@@ -82,22 +77,13 @@ export const getFilmDetails = film => dispatch =>
           if (directorArr.length) { // some movies have no director
             const director = directorArr[0].name;
 
-            dispatch(setFilm({ ...film, runtime, cast, director }));
-
-            dispatch(searchActions.searchByDirector(director));
-            dispatch(searchActions.setResultDetails(film.id, { runtime, cast, director }));
+            dispatch(searchActions.searchByDirector(director))
+              .then(() => {
+                dispatch(searchActions.setResultDetails(film.id, { runtime, cast, director }));
+              });
           }
         } else {
-          dispatch(setFilm({ ...film, runtime, cast }));
           dispatch(searchActions.setResultDetails(film.id, { runtime, cast }));
         }
       }
     });
-
-export const selectFilm = film => (dispatch) => {
-  dispatch(setFilm(film)); // display available data
-
-  if (!film.runtime || !film.cast || !film.director) {
-    dispatch(getFilmDetails(film)); // fetch additional data
-  }
-};

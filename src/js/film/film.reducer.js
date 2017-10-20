@@ -7,11 +7,6 @@ const initialState = {
 
 const filmReducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.SET_FILM:
-      return {
-        ...state,
-        film: action.film,
-      };
     case actionTypes.SET_IS_LOADING:
       return {
         ...state,

@@ -8,7 +8,6 @@ import Footer from '../common/footer';
 import filmPropShape from '../common/utils/propShapes';
 import * as actions from './search.actions';
 import * as selectors from './search.selectors';
-import { actions as filmActions } from '../film';
 
 export class Search extends Component {
   static propTypes = {
@@ -34,7 +33,6 @@ export class Search extends Component {
     clearResults: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
     setSortBy: PropTypes.func.isRequired,
-    setFilm: PropTypes.func.isRequired,
   };
 
   componentWillMount() {
@@ -48,12 +46,15 @@ export class Search extends Component {
       setQuery,
     } = this.props;
 
-    if (params.query && params.query !== query) {
-      setQuery(params.query);
-      if (searchBy === 'director') {
-        searchByDirector(params.query, sortBy);
-      } else {
-        searchByTitle(params.query, sortBy);
+    if (params.query) {
+      const paramsQuery = decodeURIComponent(params.query);
+      if (paramsQuery !== query) {
+        setQuery(paramsQuery);
+        if (searchBy === 'director') {
+          searchByDirector(paramsQuery, sortBy);
+        } else {
+          searchByTitle(paramsQuery, sortBy);
+        }
       }
     }
   }
@@ -72,7 +73,7 @@ export class Search extends Component {
     e.preventDefault(); // submitting the form to support search on enter
 
     if (query) {
-      history.push(`/search/${query}`);
+      history.push(`/search/${encodeURIComponent(query)}`);
       if (searchBy === 'director') {
         searchByDirector(query, sortBy);
       } else {
@@ -89,11 +90,10 @@ export class Search extends Component {
   }
 
   handleSelectFilm = (film) => {
-    const { history, setFilm } = this.props;
+    const { history } = this.props;
 
-    setFilm(film);
     window.scrollTo(0, 0);
-    history.push(`/film/${film.title}`);
+    history.push(`/film/${encodeURIComponent(film.title)}`);
   }
 
   handleSearchByChange = (searchBy) => {
@@ -163,7 +163,6 @@ const mapDispatchToProps = {
   clearResults: actions.clearResults,
   setSearchBy: actions.setSearchBy,
   setSortBy: actions.setSortBy,
-  setFilm: filmActions.setFilm,
 };
 
 export default connect(
