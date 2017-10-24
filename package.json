@@ -4,10 +4,10 @@
   "description": "React Mentoring Program",
   "main": "server/index.js",
   "scripts": {
-    "start": "npm run prod",
-    "build": "webpack --config webpack.config.prod.js",
     "dev": "webpack-dev-server --config webpack.config.dev.js",
+    "build": "webpack --config webpack.config.prod.js",
     "prod": "node server",
+    "start": "npm run prod",
     "lint": "esw --ext .js --ext .jsx src/js",
     "lint:watch": "npm run lint -- --watch",
     "lint:debug": "npm run lint -- --debug",
