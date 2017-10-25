@@ -6,10 +6,8 @@ import Result from '../common/result';
 import List from '../common/list';
 import Footer from '../common/footer';
 import filmPropShape from '../common/utils/propShapes';
-import * as selectors from './film.selectors';
-import * as actions from './film.actions';
-import * as searchSelectors from '../search/search.selectors';
-import * as searchActions from '../search/search.actions';
+import * as selectors from '../common/store/selectors';
+import * as actions from '../common/store/actions';
 
 export class Film extends Component {
   static defaultProps = {
@@ -33,7 +31,7 @@ export class Film extends Component {
     searchByDirector: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    searchIsLoading: PropTypes.bool.isRequired,
+    isFilmLoading: PropTypes.bool.isRequired,
   };
 
   componentWillMount() {
@@ -95,7 +93,7 @@ export class Film extends Component {
   }
 
   render() {
-    const { isLoading, film, filteredResults, searchIsLoading } = this.props;
+    const { isLoading, isFilmLoading, film, filteredResults } = this.props;
 
     return (
       <div className="app__container">
@@ -105,7 +103,7 @@ export class Film extends Component {
             onSearchClick={this.handleSearchClick}
           />
         )}
-        { film && !isLoading && (
+        { film && !isFilmLoading && (
           <Result
             film={film}
             results={filteredResults}
@@ -114,7 +112,7 @@ export class Film extends Component {
         <List
           results={filteredResults}
           onSelectFilm={this.handleSelectFilm}
-          isLoading={isLoading || searchIsLoading}
+          isLoading={isLoading || isFilmLoading}
         />
         <Footer />
       </div>
@@ -126,14 +124,14 @@ const mapStateToProps = (state, props) => ({
   film: selectors.filmSelector(state, props),
   filteredResults: selectors.filteredResultsSelector(state, props),
   isLoading: selectors.isLoadingSelector(state),
-  searchIsLoading: searchSelectors.isLoadingSelector(state),
+  isFilmLoading: selectors.isFilmLoadingSelector(state),
 });
 
 const mapDispatchToProps = {
   getFilm: actions.getFilm,
   getFilmDetails: actions.getFilmDetails,
-  searchByDirector: searchActions.searchByDirector,
-  setSearchBy: searchActions.setSearchBy,
+  searchByDirector: actions.searchByDirector,
+  setSearchBy: actions.setSearchBy,
 };
 
 export default connect(

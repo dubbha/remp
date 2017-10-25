@@ -1,6 +1,6 @@
-import reducer from './search.reducer';
-import * as actions from './search.actions';
-import * as selectors from './search.selectors';
+import reducer from '../common/store/reducer';
+import * as actions from '../common/store/actions';
+import * as selectors from '../common/store/selectors';
 
 export { default } from './Search';
 

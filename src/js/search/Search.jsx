@@ -6,8 +6,8 @@ import Result from '../common/result';
 import List from '../common/list';
 import Footer from '../common/footer';
 import filmPropShape from '../common/utils/propShapes';
-import * as actions from './search.actions';
-import * as selectors from './search.selectors';
+import * as actions from '../common/store/actions';
+import * as selectors from '../common/store/selectors';
 
 export class Search extends Component {
   static propTypes = {
