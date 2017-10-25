@@ -42,16 +42,15 @@ export const isFilmLoadingSelector = createSelector(
   ({ isFilmLoading }) => isFilmLoading,
 );
 
-const paramsTitleSelector = (state, props) => decodeURIComponent(props.match.params.title);
+const paramsIdSelector = (state, props) => +props.match.params.id;
 
 export const filmSelector = createSelector(
-  [resultsSelector, paramsTitleSelector],
-  (results, title) =>
-    results && title && results.filter(item => item.title === title)[0],
+  [resultsSelector, paramsIdSelector],
+  (results, id) => results && id && results.filter(item => item.id === id)[0],
 );
 
 export const filteredResultsSelector = createSelector(
-  [resultsSelector, paramsTitleSelector],
-  (results, title) =>
-    results && title && results.filter(item => item.title !== title),
+  [resultsSelector, paramsIdSelector],
+  (results, id) =>
+    results && id && results.filter(item => item.id !== id),
 );

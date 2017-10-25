@@ -8,7 +8,7 @@ const App = () => (
   <div className="app">
     <Switch>
       <Route path="/search/:query?" component={Search} />
-      <Route path="/film/:title" component={Film} />
+      <Route path="/film/:id/:title?" component={Film} />
       <Redirect from="/" to="/search" />
     </Switch>
   </div>

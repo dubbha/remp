@@ -18,6 +18,7 @@ export class Film extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
+        id: PropTypes.string,
         title: PropTypes.string,
       }),
     }).isRequired,
@@ -44,10 +45,10 @@ export class Film extends Component {
       searchByDirector,
     } = this.props;
 
-    const title = decodeURIComponent(params.title);
+    const id = +params.id;
 
     if (!film) {
-      getFilm(title);
+      getFilm(id);
     } else {
       if (!film.runtime || !film.cast || !film.director) {
         getFilmDetails(film);
@@ -59,13 +60,13 @@ export class Film extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.title !== this.props.match.params.title) {
+    if (nextProps.match.params.id !== this.props.match.params.id) {
       const film = nextProps.film;
-      const title = decodeURIComponent(nextProps.match.params.title);
+      const id = nextProps.match.params.id;
       const { getFilm, getFilmDetails } = this.props;
 
       if (!film) {
-        getFilm(title);
+        getFilm(id);
       } else if (!film.runtime || !film.cast || !film.director) {
         getFilmDetails(film);
       }
@@ -76,7 +77,7 @@ export class Film extends Component {
     const { history } = this.props;
 
     window.scrollTo(0, 0);
-    history.push(`/film/${encodeURIComponent(film.title)}`);
+    history.push(`/film/${film.id}/${encodeURIComponent(film.title)}`);
   }
 
   handleSearchClick = () => {

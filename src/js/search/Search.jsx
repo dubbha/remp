@@ -59,6 +59,20 @@ export class Search extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.match.params.query !== this.props.match.params.query) {
+      const { searchBy, sortBy, setQuery, searchByDirector, searchByTitle } = nextProps;
+      const nextPropsQuery = decodeURIComponent(nextProps.match.params.query);
+
+      setQuery(nextPropsQuery);
+      if (searchBy === 'director') {
+        searchByDirector(nextPropsQuery, sortBy);
+      } else {
+        searchByTitle(nextPropsQuery, sortBy);
+      }
+    }
+  }
+
   handleSearch = (e) => {
     const {
       history,
@@ -93,7 +107,7 @@ export class Search extends Component {
     const { history } = this.props;
 
     window.scrollTo(0, 0);
-    history.push(`/film/${encodeURIComponent(film.title)}`);
+    history.push(`/film/${film.id}/${encodeURIComponent(film.title)}`);
   }
 
   handleSearchByChange = (searchBy) => {

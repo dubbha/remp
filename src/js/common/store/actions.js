@@ -116,50 +116,41 @@ export const searchByTitle = (query, sortBy = defaultSortBy) => (dispatch) => {
     });
 };
 
-export const getFilm = query => (dispatch) => {
+export const getFilm = id => (dispatch) => {
   dispatch(setIsLoading(true));
 
-  return axios.get(`${apiUrl}search/movie`,
+  return axios.get(`${apiUrl}movie/${id}`,
     {
       params: {
-        query,
         api_key: apiKey,
+        append_to_response: 'credits',
       },
     })
     .then((res) => {
-      if (res.data && res.data.results && res.data.results.length) {
-        const film = res.data.results[0];
-        return axios.get(`${apiUrl}movie/${film.id}`,
-          {
-            params: {
-              query,
-              api_key: apiKey,
-              append_to_response: 'credits',
-            },
-          })
-          .then((res2) => {
-            dispatch(setIsLoading(false)); // film is ready to be displayed without extra details
+      dispatch(setIsLoading(false)); // film is ready to be displayed without extra details
 
-            if (res2.data && res2.data.credits) {
-              const runtime = res2.data.runtime;
-              const cast = res2.data.credits.cast;
+      if (res.data) {
+        const film = res.data;
 
-              const directorArr = res2.data.credits.crew.filter(i => i.job === 'Director');
+        const runtime = res.data.runtime;
+        const cast = res.data.credits.cast;
 
-              if (directorArr.length) {
-                const director = directorArr[0].name;
-                dispatch(searchByDirector(director))
-                  .then(() => {
-                    dispatch(setResultDetails(film.id, { runtime, cast, director }));
-                  });
-              } else { // no director to search by, this film is the only film in the list
-                dispatch(setResults([film]));
-                dispatch(setResultDetails(film.id, { runtime, cast }));
-              }
-            }
-          });
+        let directorArr;
+        if (res.data.credits && res.data.credits.crew) {
+          directorArr = res.data.credits.crew.filter(i => i.job === 'Director');
+        }
+
+        if (directorArr.length) {
+          const director = directorArr[0].name;
+          dispatch(searchByDirector(director))
+            .then(() => {
+              dispatch(setResultDetails(id, { runtime, cast, director }));
+            });
+        } else { // no director to search by, this film is the only film in the list
+          dispatch(setResults([film]));
+          dispatch(setResultDetails(id, { runtime, cast }));
+        }
       }
-      return Promise.reject(res);
     });
 };
 
