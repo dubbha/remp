@@ -1,5 +1,5 @@
-import { actionTypes } from './search.actions';
-import { searchByParams, sortByParams, defaultSearchBy, defaultSortBy } from './search.config';
+import { actionTypes } from './actions';
+import { searchByParams, sortByParams, defaultSearchBy, defaultSortBy } from './store.config';
 
 const initialState = {
   query: '',
@@ -9,6 +9,7 @@ const initialState = {
   searchBy: defaultSearchBy,
   sortBy: defaultSortBy,
   isLoading: false,
+  isFilmLoading: false,
 };
 
 const searchReducer = (state = initialState, action) => {
@@ -28,6 +29,12 @@ const searchReducer = (state = initialState, action) => {
         ...state,
         results: [],
       };
+    case actionTypes.SET_RESULT_DETAILS:
+      return {
+        ...state,
+        results: state.results
+          .map(i => (i.id === action.id ? { ...i, ...action.details } : i)),
+      };
     case actionTypes.SET_SEARCH_BY:
       return {
         ...state,
@@ -42,6 +49,11 @@ const searchReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: action.isLoading,
+      };
+    case actionTypes.SET_IS_FILM_LOADING:
+      return {
+        ...state,
+        isLoading: action.isFilmLoading,
       };
     default:
       return state;

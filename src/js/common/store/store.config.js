@@ -5,8 +5,9 @@ export const defaultSearchBy = searchByParams[1];
 export const defaultSortBy = sortByParams[0];
 
 const sortByApiMap = {
-  'release date': 'release_year',
-  rating: 'rating',
+  'release date': 'release_date',
+  rating: 'vote_average',
 };
 
-export const sortFnFabric = sortBy => (a, b) => b[sortByApiMap[sortBy]] - a[sortByApiMap[sortBy]];
+export const sortFnFabric = sortBy =>
+  (a, b) => (b[sortByApiMap[sortBy]] > a[sortByApiMap[sortBy]] ? 1 : -1);

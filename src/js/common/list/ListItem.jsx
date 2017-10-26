@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { imgUrl } from '../config/api.config';
+import filmPropShape from '../utils/propShapes';
+import parseYear from '../utils/parseYear';
+import mapGenres from '../utils/mapGenres';
 
 export default class ListItem extends Component {
   static propTypes = {
-    item: PropTypes.shape({
-      poster: PropTypes.string.isRequired,
-    }).isRequired,
+    item: PropTypes.shape(filmPropShape).isRequired,
     onSelectFilm: PropTypes.func.isRequired,
   };
 
@@ -28,8 +30,8 @@ export default class ListItem extends Component {
             onClick={this.handleSelectFilm}
           >
             <img
-              src={item.poster}
-              alt={item.show_title}
+              src={`${imgUrl}${item.poster_path}`}
+              alt={item.title}
               className="list__image"
             />
           </a>
@@ -40,11 +42,11 @@ export default class ListItem extends Component {
               className="list__link list__title"
               onClick={this.handleSelectFilm}
             >
-              {item.show_title}
+              {item.title}
             </a>
-            <span className="list__year">{item.release_year}</span>
+            <span className="list__year">{parseYear(item.release_date)}</span>
           </div>
-          <div className="list__category">{item.category}</div>
+          <div className="list__category">{mapGenres(item.genre_ids)}</div>
         </div>
       </div>
     );

@@ -1,6 +1,6 @@
-import reducer from './film.reducer';
-import * as actions from './film.actions';
-import * as selectors from './film.selectors';
+import reducer from '../common/store/reducer';
+import * as actions from '../common/store/actions';
+import * as selectors from '../common/store/selectors';
 
 export { default } from './Film';
 

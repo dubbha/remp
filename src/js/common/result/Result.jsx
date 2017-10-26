@@ -42,8 +42,8 @@ Result.defaultProps = {
 };
 
 Result.propTypes = {
-  results: PropTypes.arrayOf(filmPropShape),
-  film: filmPropShape,
+  results: PropTypes.arrayOf(PropTypes.shape(filmPropShape)),
+  film: PropTypes.shape(filmPropShape),
   sortBy: PropTypes.string,
   onSortByChange: PropTypes.func,
   sortByParams: PropTypes.arrayOf(PropTypes.string),

@@ -4,7 +4,11 @@ import './style.sass';
 
 const Result = ({ film }) => (
   <div>
-    Films by { film.director.split(',')[0] }
+    {
+      film.director
+        ? `Films by ${film.director}`
+        : 'Director unknown'
+    }
   </div>
 );
 

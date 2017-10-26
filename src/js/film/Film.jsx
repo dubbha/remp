@@ -6,10 +6,8 @@ import Result from '../common/result';
 import List from '../common/list';
 import Footer from '../common/footer';
 import filmPropShape from '../common/utils/propShapes';
-import * as selectors from './film.selectors';
-import * as actions from './film.actions';
-import * as searchSelectors from '../search/search.selectors';
-import * as searchActions from '../search/search.actions';
+import * as selectors from '../common/store/selectors';
+import * as actions from '../common/store/actions';
 
 export class Film extends Component {
   static defaultProps = {
@@ -20,20 +18,21 @@ export class Film extends Component {
   static propTypes = {
     match: PropTypes.shape({
       params: PropTypes.shape({
+        id: PropTypes.string,
         title: PropTypes.string,
       }),
     }).isRequired,
     history: PropTypes.shape({
       push: PropTypes.func,
     }).isRequired,
-    film: filmPropShape,
-    filteredResults: PropTypes.arrayOf(filmPropShape),
+    film: PropTypes.shape(filmPropShape),
+    filteredResults: PropTypes.arrayOf(PropTypes.shape(filmPropShape)),
     getFilm: PropTypes.func.isRequired,
-    search: PropTypes.func.isRequired,
+    getFilmDetails: PropTypes.func.isRequired,
+    searchByDirector: PropTypes.func.isRequired,
     setSearchBy: PropTypes.func.isRequired,
-    setFilm: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
-    searchIsLoading: PropTypes.bool.isRequired,
+    isFilmLoading: PropTypes.bool.isRequired,
   };
 
   componentWillMount() {
@@ -42,34 +41,60 @@ export class Film extends Component {
       film,
       filteredResults,
       getFilm,
-      search,
+      getFilmDetails,
+      searchByDirector,
     } = this.props;
 
+    const id = +params.id;
+
     if (!film) {
-      getFilm(params.title);
-    } else if (film && filteredResults && filteredResults.length === 0) {
-      search(film.director, 'director');
+      getFilm(id);
+    } else {
+      if (!film.runtime || !film.cast || !film.director) {
+        getFilmDetails(film);
+      }
+      if (filteredResults && filteredResults.length === 0 && film.director) {
+        searchByDirector(film.director);
+      }
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.match.params.id !== this.props.match.params.id) {
+      const film = nextProps.film;
+      const id = nextProps.match.params.id;
+      const { getFilm, getFilmDetails } = this.props;
+
+      if (!film) {
+        getFilm(id);
+      } else if (!film.runtime || !film.cast || !film.director) {
+        getFilmDetails(film);
+      }
     }
   }
 
   handleSelectFilm = (film) => {
-    const { history, setFilm } = this.props;
+    const { history } = this.props;
 
-    setFilm(film);
     window.scrollTo(0, 0);
-    history.push(`/film/${film.show_title}`);
+    history.push(`/film/${film.id}/${encodeURIComponent(film.title)}`);
   }
 
   handleSearchClick = () => {
     const { history, setSearchBy, film } = this.props;
 
     window.scrollTo(0, 0);
-    setSearchBy('director');
-    history.push(`/search/${film.director.split(',')[0]}`);
+
+    if (film.director) {
+      setSearchBy('director');
+      history.push(`/search/${encodeURIComponent(film.director)}`);
+    } else {
+      history.push('/search');
+    }
   }
 
   render() {
-    const { isLoading, film, filteredResults, searchIsLoading } = this.props;
+    const { isLoading, isFilmLoading, film, filteredResults } = this.props;
 
     return (
       <div className="app__container">
@@ -79,7 +104,7 @@ export class Film extends Component {
             onSearchClick={this.handleSearchClick}
           />
         )}
-        { film && !isLoading && (
+        { film && !isFilmLoading && (
           <Result
             film={film}
             results={filteredResults}
@@ -88,7 +113,7 @@ export class Film extends Component {
         <List
           results={filteredResults}
           onSelectFilm={this.handleSelectFilm}
-          isLoading={isLoading || searchIsLoading}
+          isLoading={isLoading || isFilmLoading}
         />
         <Footer />
       </div>
@@ -96,18 +121,18 @@ export class Film extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  film: selectors.filmSelector(state),
-  filteredResults: selectors.filteredResultsSelector(state),
+const mapStateToProps = (state, props) => ({
+  film: selectors.filmSelector(state, props),
+  filteredResults: selectors.filteredResultsSelector(state, props),
   isLoading: selectors.isLoadingSelector(state),
-  searchIsLoading: searchSelectors.isLoadingSelector(state),
+  isFilmLoading: selectors.isFilmLoadingSelector(state),
 });
 
 const mapDispatchToProps = {
-  setFilm: actions.setFilm,
   getFilm: actions.getFilm,
-  search: searchActions.search,
-  setSearchBy: searchActions.setSearchBy,
+  getFilmDetails: actions.getFilmDetails,
+  searchByDirector: actions.searchByDirector,
+  setSearchBy: actions.setSearchBy,
 };
 
 export default connect(
