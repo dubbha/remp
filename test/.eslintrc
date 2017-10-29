@@ -1,0 +1,20 @@
+{
+  "extends": "../.eslintrc",
+  "rules": {
+      "react/prop-types": 0
+  },
+  "globals": {
+    "jest": false,
+    "describe": false,
+    "it": false,
+    "test": false,
+    "beforeEach": false,
+    "beforeAll": false,
+    "afterEach": false,
+    "afterAll": false,
+    "expect": false,
+    "xdescribe": false,
+    "xit": false,
+    "xtest": false
+  }
+}

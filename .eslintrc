@@ -17,6 +17,7 @@
       "sourceType": "module"
     },
     "rules": {
+      "max-len": [2, 120],
       "indent": [2, 2, {"SwitchCase": 1}],
       "react/jsx-indent": [2, 2],
       "react/jsx-indent-props": [2, 2],
@@ -34,14 +35,6 @@
       "React": false,
       "window": false,
       "document": false,
-      "jest": false,
-      "test": false,
-      "describe": false,
-      "beforeEach": false,
-      "beforeAll": false,
-      "afterEach": false,
-      "it": false,
-      "expect": false,
       "localStorage": false,
       "sessionStorage": false
     }

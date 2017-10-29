@@ -109,7 +109,7 @@ export class Film extends Component {
             film={film}
             results={filteredResults}
           />
-        )}
+        ) }
         <List
           results={filteredResults}
           onSelectFilm={this.handleSelectFilm}

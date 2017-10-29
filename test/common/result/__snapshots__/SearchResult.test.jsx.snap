@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchResult should render emtpy on empty results list 1`] = `""`;
+
+exports[`SearchResult should render successfully 1`] = `
+<div
+  className="searchResult"
+>
+  <span
+    className="searchResult__line"
+  >
+    5 movies found
+  </span>
+  <span
+    className="searchResult__line"
+  >
+    Sort by
+    <SearchSortByLink
+      active={true}
+      key="release date"
+      onClickWithText={[Function]}
+      text="release date"
+    />
+    <SearchSortByLink
+      active={false}
+      key="rating"
+      onClickWithText={[Function]}
+      text="rating"
+    />
+  </span>
+</div>
+`;
+
+exports[`SearchResult should switch the active link according to the selected sort by parameter 1`] = `
+<div
+  className="searchResult"
+>
+  <span
+    className="searchResult__line"
+  >
+    5 movies found
+  </span>
+  <span
+    className="searchResult__line"
+  >
+    Sort by
+    <SearchSortByLink
+      active={false}
+      key="release date"
+      onClickWithText={[Function]}
+      text="release date"
+    />
+    <SearchSortByLink
+      active={true}
+      key="rating"
+      onClickWithText={[Function]}
+      text="rating"
+    />
+  </span>
+</div>
+`;

@@ -48,9 +48,9 @@ export const setIsLoading = isLoading => ({
   isLoading,
 });
 
-export const setIsFilmLoading = isLoading => ({
+export const setIsFilmLoading = isFilmLoading => ({
   type: actionTypes.SET_IS_FILM_LOADING,
-  isLoading,
+  isFilmLoading,
 });
 
 export const searchByDirector = (query, sortBy = defaultSortBy) => (dispatch) => {
@@ -81,7 +81,9 @@ export const searchByDirector = (query, sortBy = defaultSortBy) => (dispatch) =>
 
               dispatch(setIsLoading(false));
               dispatch(setResults(films, sortBy));
+              return true;
             }
+            return Promise.reject(res2);
           });
       }
       return Promise.reject(res);
@@ -103,12 +105,15 @@ export const searchByTitle = (query, sortBy = defaultSortBy) => (dispatch) => {
       },
     })
     .then((res) => {
-      if (res.data && res.data.results) {
+      if (res.data && res.data.results && res.data.results.length) {
         const films = res.data.results
           .filter(i => !!i.title && !!i.release_date && !!i.poster_path);
+
         dispatch(setResults(films, sortBy));
         dispatch(setIsLoading(false));
+        return true;
       }
+      return Promise.reject(res);
     })
     .catch(() => {
       dispatch(clearResults());

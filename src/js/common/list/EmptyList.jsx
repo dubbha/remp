@@ -1,9 +1,9 @@
 import React from 'react';
 
-const List = () => (
+const EmptyList = () => (
   <div className="list__message">
     No films found
   </div>
 );
 
-export default List;
+export default EmptyList;
