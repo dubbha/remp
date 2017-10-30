@@ -1,7 +1,10 @@
 {
   "extends": "../.eslintrc",
   "rules": {
-      "react/prop-types": 0
+      "global-require": 0,
+      "react/prop-types": 0,
+      "no-return-assign": 0,
+      "no-param-reassign": 0
   },
   "globals": {
     "jest": false,

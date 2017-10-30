@@ -138,25 +138,31 @@ export const getFilm = id => (dispatch) => {
         const film = res.data;
 
         const runtime = res.data.runtime;
-        const cast = res.data.credits.cast;
+        const cast = res.data.credits.cast || [];
 
-        let directorArr;
+        let directorArr = [];
         if (res.data.credits && res.data.credits.crew) {
           directorArr = res.data.credits.crew.filter(i => i.job === 'Director');
         }
 
         if (directorArr.length) {
           const director = directorArr[0].name;
-          dispatch(searchByDirector(director))
+          return searchByDirector(director)(dispatch)
             .then(() => {
               dispatch(setResultDetails(id, { runtime, cast, director }));
             });
-        } else { // no director to search by, this film is the only film in the list
-          dispatch(setResults([film]));
-          dispatch(setResultDetails(id, { runtime, cast }));
         }
+        // no director to search by, this film is the only film in the list
+        film.cast = cast;
+        film.genre_ids = res.data.genres && res.data.genres.length
+          ? res.data.genres.map(i => i.id)
+          : [];
+
+        dispatch(setResults(film));
       }
-    });
+      return Promise.reject();
+    })
+    .catch(() => dispatch(clearResults()));
 };
 
 export const getFilmDetails = film => dispatch =>
@@ -178,7 +184,7 @@ export const getFilmDetails = film => dispatch =>
           if (directorArr.length) { // some movies have no director
             const director = directorArr[0].name;
 
-            dispatch(searchByDirector(director))
+            return searchByDirector(director)(dispatch)
               .then(() => {
                 dispatch(setResultDetails(film.id, { runtime, cast, director }));
               });
@@ -187,4 +193,5 @@ export const getFilmDetails = film => dispatch =>
           dispatch(setResultDetails(film.id, { runtime, cast }));
         }
       }
+      return true;
     });

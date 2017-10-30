@@ -587,4 +587,211 @@ describe('actions', () => {
         );
     });
   });
+
+  describe('getFilm action', () => {
+    beforeEach(() => {
+      thunk = sut.getFilm(123);
+    });
+
+    it('should raise isLoading flag', () => {
+      thunk(dispatch);
+
+      expect(dispatch).toBeCalledWith({
+        type: sut.actionTypes.SET_IS_LOADING,
+        isLoading: true,
+      });
+    });
+
+    it('should search movie by query', () => {
+      thunk(dispatch);
+
+      expect(axios.get).toBeCalledWith('https://API_URL/movie/123', {
+        params: {
+          api_key: 'API_KEY',
+          append_to_response: 'credits',
+        },
+      });
+    });
+
+    it('should reset isLoading flag upon receiving the response', () => {
+      axios.get
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              runtime: 120,
+              credits: {
+                cast: [],
+                crew: [],
+              },
+            },
+          }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_IS_LOADING,
+            isLoading: false,
+          }),
+        );
+    });
+
+    it('should set results to a single film with genre ids extracted if no director available', () => {
+      axios.get
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              runtime: 120,
+              credits: {
+                cast: [],
+                crew: [],
+              },
+              genres: [
+                { id: 1, name: 'GENRE_NAME1' },
+                { id: 2, name: 'GENRE_NAME2' },
+                { id: 3, name: 'GENRE_NAME3' },
+              ],
+            },
+          }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULTS,
+            results: [{
+              runtime: 120,
+              credits: {
+                cast: [],
+                crew: [],
+              },
+              genres: [
+                { id: 1, name: 'GENRE_NAME1' },
+                { id: 2, name: 'GENRE_NAME2' },
+                { id: 3, name: 'GENRE_NAME3' },
+              ],
+              cast: [],
+              genre_ids: [1, 2, 3],
+            }],
+          }),
+        );
+    });
+
+    it('should set results to a single film with genre ids extracted if no credits available', () => {
+      axios.get
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              runtime: 120,
+              credits: {},
+              genres: [
+                { id: 1, name: 'GENRE_NAME1' },
+                { id: 2, name: 'GENRE_NAME2' },
+                { id: 3, name: 'GENRE_NAME3' },
+              ],
+            },
+          }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULTS,
+            results: [{
+              runtime: 120,
+              credits: {},
+              genres: [
+                { id: 1, name: 'GENRE_NAME1' },
+                { id: 2, name: 'GENRE_NAME2' },
+                { id: 3, name: 'GENRE_NAME3' },
+              ],
+              cast: [],
+              genre_ids: [1, 2, 3],
+            }],
+          }),
+        );
+    });
+
+    it('should search for other films by the same director if director is available', () => {
+      axios.get
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              runtime: 120,
+              credits: {
+                cast: [],
+                crew: [
+                  { job: 'Someguy', name: 'SOMEGUY_NAME' },
+                  { job: 'Director', name: 'DIRECTOR_NAME' },
+                ],
+              },
+              genres: [
+                { id: 1, name: 'GENRE_NAME1' },
+                { id: 2, name: 'GENRE_NAME2' },
+                { id: 3, name: 'GENRE_NAME3' },
+              ],
+            },
+          }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(axios.get).toBeCalledWith('https://API_URL/search/person', {
+            params: {
+              query: 'DIRECTOR_NAME',
+              api_key: 'API_KEY',
+            },
+          }),
+        );
+    });
+
+    it('should preserve extra film details by adding them to the results', () => {
+      axios.get
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              runtime: 120,
+              credits: {
+                cast: [
+                  { character: 'CHARACTER1', name: 'NAME1' },
+                  { character: 'CHARACTER2', name: 'NAME2' },
+                ],
+                crew: [
+                  { job: 'Someguy', name: 'SOMEGUY_NAME' },
+                  { job: 'Director', name: 'DIRECTOR_NAME' },
+                ],
+              },
+              genres: [
+                { id: 1, name: 'GENRE_NAME1' },
+                { id: 2, name: 'GENRE_NAME2' },
+                { id: 3, name: 'GENRE_NAME3' },
+              ],
+            },
+          }))
+        .mockReturnValueOnce(Promise.resolve({
+          data: {
+            results: [{ id: 1 }],
+          },
+        }))
+        .mockReturnValueOnce(Promise.resolve({
+          data: {
+            movie_credits: {
+              crew: [],
+            },
+          },
+        }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULT_DETAILS,
+            id: 123,
+            details: {
+              runtime: 120,
+              cast: [
+                { character: 'CHARACTER1', name: 'NAME1' },
+                { character: 'CHARACTER2', name: 'NAME2' },
+              ],
+              director: 'DIRECTOR_NAME',
+            },
+          }),
+        );
+    });
+  });
 });

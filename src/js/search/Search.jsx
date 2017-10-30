@@ -61,14 +61,20 @@ export class Search extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.match.params.query !== this.props.match.params.query) {
-      const { searchBy, sortBy, setQuery, searchByDirector, searchByTitle } = nextProps;
-      const nextPropsQuery = decodeURIComponent(nextProps.match.params.query);
+      const { searchBy, sortBy, setQuery, clearResults, searchByDirector, searchByTitle } = nextProps;
 
-      setQuery(nextPropsQuery);
-      if (searchBy === 'director') {
-        searchByDirector(nextPropsQuery, sortBy);
+      if (nextProps.match.params.query) {
+        const nextPropsQuery = decodeURIComponent(nextProps.match.params.query);
+
+        setQuery(nextPropsQuery);
+        if (searchBy === 'director') {
+          searchByDirector(nextPropsQuery, sortBy);
+        } else {
+          searchByTitle(nextPropsQuery, sortBy);
+        }
       } else {
-        searchByTitle(nextPropsQuery, sortBy);
+        setQuery('');
+        clearResults();
       }
     }
   }

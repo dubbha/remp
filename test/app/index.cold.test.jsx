@@ -1,7 +1,5 @@
 import React from 'react';
 
-require('app');
-
 jest.mock('react-hot-loader', () => ({
   AppContainer({ children }) {
     return (<x-app-container>{children}</x-app-container>);
@@ -21,13 +19,13 @@ jest.mock('react-router-dom', () => ({
   },
 }));
 
-
 jest.mock('app/App', () => function App() { return <x-app />; });
 
 jest.mock('app/configureStore', () => jest.fn());
 
 describe('app/index', () => {
   it('should render successfully', () => {
+    require('app');
     expect(document.getElementById().innerHTML).toMatchSnapshot();
   });
 });
