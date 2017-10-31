@@ -10,7 +10,7 @@ import mapGenres from '../utils/mapGenres';
 import displayCast from '../utils/displayCast';
 import './style.sass';
 
-const Film = ({ film, onSearchClick }) => (
+const FilmHeader = ({ film, onSearchClick }) => (
   <header className="film">
     <ErrorBoundary>
       <div className="film__headerContainer">
@@ -39,9 +39,9 @@ const Film = ({ film, onSearchClick }) => (
   </header>
 );
 
-Film.propTypes = {
+FilmHeader.propTypes = {
   film: PropTypes.shape(filmPropShape).isRequired,
   onSearchClick: PropTypes.func.isRequired,
 };
 
-export default Film;
+export default FilmHeader;

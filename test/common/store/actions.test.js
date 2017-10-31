@@ -151,11 +151,12 @@ describe('actions', () => {
     });
 
     it('should request crew movie credits by the first person id', () => {
-      axios.get.mockReturnValueOnce(Promise.resolve({
-        data: {
-          results: [{ id: 123 }],
-        },
-      }));
+      axios.get.mockReturnValueOnce(
+        Promise.resolve({
+          data: {
+            results: [{ id: 123 }],
+          },
+        }));
 
       return thunk(dispatch).then(() =>
         expect(axios.get).toBeCalledWith('https://API_URL/person/123', {
@@ -681,7 +682,6 @@ describe('actions', () => {
           Promise.resolve({
             data: {
               runtime: 120,
-              credits: {},
               genres: [
                 { id: 1, name: 'GENRE_NAME1' },
                 { id: 2, name: 'GENRE_NAME2' },
@@ -696,7 +696,6 @@ describe('actions', () => {
             type: sut.actionTypes.SET_RESULTS,
             results: [{
               runtime: 120,
-              credits: {},
               genres: [
                 { id: 1, name: 'GENRE_NAME1' },
                 { id: 2, name: 'GENRE_NAME2' },
@@ -764,18 +763,20 @@ describe('actions', () => {
               ],
             },
           }))
-        .mockReturnValueOnce(Promise.resolve({
-          data: {
-            results: [{ id: 1 }],
-          },
-        }))
-        .mockReturnValueOnce(Promise.resolve({
-          data: {
-            movie_credits: {
-              crew: [],
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              results: [{ id: 1 }],
             },
-          },
-        }));
+          }))
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              movie_credits: {
+                crew: [],
+              },
+            },
+          }));
 
       return thunk(dispatch)
         .then(() =>
@@ -791,6 +792,233 @@ describe('actions', () => {
               director: 'DIRECTOR_NAME',
             },
           }),
+        );
+    });
+
+    it('should clear results if no data received', () => {
+      axios.get.mockReturnValueOnce(Promise.resolve({}));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.CLEAR_RESULTS,
+          }),
+        );
+    });
+
+    it('should clear results on server error', () => {
+      axios.get
+        .mockReturnValueOnce(
+          Promise.reject({
+            status: 500,
+          }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.CLEAR_RESULTS,
+          }),
+        );
+    });
+  });
+
+  describe('getFilmDetails action', () => {
+    beforeEach(() => {
+      thunk = sut.getFilmDetails({
+        id: 123,
+        director: 'DIRECTOR',
+      });
+    });
+
+    it('should search movie by id', () => {
+      thunk(dispatch);
+
+      expect(axios.get).toBeCalledWith('https://API_URL/movie/123', {
+        params: {
+          api_key: 'API_KEY',
+          append_to_response: 'credits',
+        },
+      });
+    });
+
+    it('should update specific result with runtime and cast if director is already known', () => {
+      axios.get.mockReturnValueOnce(
+        Promise.resolve({
+          data: {
+            runtime: 120,
+            credits: {
+              cast: [{ id: 1 }],
+            },
+          },
+        }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULT_DETAILS,
+            id: 123,
+            details: {
+              runtime: 120,
+              cast: [{ id: 1 }],
+            },
+          }),
+        );
+    });
+
+    it('should search for other films of the same director after director is retrieved', () => {
+      thunk = sut.getFilmDetails({
+        id: 123,
+      });
+
+      axios.get.mockReturnValueOnce(
+        Promise.resolve({
+          data: {
+            runtime: 120,
+            credits: {
+              cast: [
+                { id: 1, name: 'ACTOR_NAME' },
+                { id: 2, name: 'ACTRESS_NAME' },
+              ],
+              crew: [
+                { job: 'Someguy', name: 'SOMEGUY_NAME' },
+                { job: 'Director', name: 'DIRECTOR_NAME' },
+              ],
+            },
+          },
+        }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(axios.get).toBeCalledWith('https://API_URL/search/person', {
+            params: {
+              query: 'DIRECTOR_NAME',
+              api_key: 'API_KEY',
+            },
+          }),
+        );
+    });
+
+    it('should update specific result in the list with runtime, cast and director', () => {
+      thunk = sut.getFilmDetails({
+        id: 123,
+      });
+
+      axios.get
+        .mockReturnValueOnce(
+          Promise.resolve({
+            data: {
+              runtime: 120,
+              credits: {
+                cast: [
+                  { id: 1, name: 'ACTOR_NAME' },
+                  { id: 2, name: 'ACTRESS_NAME' },
+                ],
+                crew: [
+                  { job: 'Someguy', name: 'SOMEGUY_NAME' },
+                  { job: 'Director', name: 'DIRECTOR_NAME' },
+                ],
+              },
+            },
+          }))
+        .mockReturnValueOnce(Promise.resolve());
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULT_DETAILS,
+            id: 123,
+            details: {
+              runtime: 120,
+              cast: [
+                { id: 1, name: 'ACTOR_NAME' },
+                { id: 2, name: 'ACTRESS_NAME' },
+              ],
+              director: 'DIRECTOR_NAME',
+            },
+          }),
+        );
+    });
+
+    it('should update specific result with runtime and cast if no director retrieved', () => {
+      thunk = sut.getFilmDetails({
+        id: 123,
+      });
+
+      axios.get.mockReturnValueOnce(
+        Promise.resolve({
+          data: {
+            runtime: 120,
+            credits: {
+              cast: [
+                { id: 1, name: 'ACTOR_NAME' },
+                { id: 2, name: 'ACTRESS_NAME' },
+              ],
+              crew: [
+                { job: 'Someguy', name: 'SOMEGUY_NAME' },
+              ],
+            },
+          },
+        }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULT_DETAILS,
+            id: 123,
+            details: {
+              runtime: 120,
+              cast: [
+                { id: 1, name: 'ACTOR_NAME' },
+                { id: 2, name: 'ACTRESS_NAME' },
+              ],
+            },
+          }),
+        );
+    });
+
+    it('should update specific result with runtime and cast if no credits are available', () => {
+      thunk = sut.getFilmDetails({
+        id: 123,
+      });
+
+      axios.get.mockReturnValueOnce(
+        Promise.resolve({
+          data: {
+            runtime: 120,
+          },
+        }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).toBeCalledWith({
+            type: sut.actionTypes.SET_RESULT_DETAILS,
+            id: 123,
+            details: {
+              runtime: 120,
+              cast: [],
+            },
+          }),
+        );
+    });
+
+    it('should fail silently on server error', () => {
+      axios.get.mockReturnValueOnce(
+        Promise.reject({
+          status: 500,
+        }));
+
+      return thunk(dispatch)
+        .then(() =>
+          expect(dispatch).not.toBeCalled(),
+        );
+    });
+
+    it('should fail silently on empty data received', () => {
+      axios.get.mockReturnValueOnce(Promise.resolve({}));
+
+      return thunk(dispatch)
+        .catch(() =>
+          expect(dispatch).not.toBeCalled(),
         );
     });
   });

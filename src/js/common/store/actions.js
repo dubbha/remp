@@ -138,7 +138,7 @@ export const getFilm = id => (dispatch) => {
         const film = res.data;
 
         const runtime = res.data.runtime;
-        const cast = res.data.credits.cast || [];
+        const cast = (res.data.credits && res.data.credits.cast) || [];
 
         let directorArr = [];
         if (res.data.credits && res.data.credits.crew) {
@@ -174,12 +174,15 @@ export const getFilmDetails = film => dispatch =>
       },
     })
     .then((res) => {
-      if (res.data && res.data) {
+      if (res.data) {
         const runtime = res.data.runtime;
-        const cast = res.data.credits.cast;
+        const cast = (res.data.credits && res.data.credits.cast) || [];
 
         if (!film.director) {
-          const directorArr = res.data.credits.crew.filter(i => i.job === 'Director');
+          let directorArr = [];
+          if (res.data.credits && res.data.credits.crew) {
+            directorArr = res.data.credits.crew.filter(i => i.job === 'Director');
+          }
 
           if (directorArr.length) { // some movies have no director
             const director = directorArr[0].name;
@@ -189,9 +192,11 @@ export const getFilmDetails = film => dispatch =>
                 dispatch(setResultDetails(film.id, { runtime, cast, director }));
               });
           }
+          dispatch(setResultDetails(film.id, { runtime, cast }));
         } else {
           dispatch(setResultDetails(film.id, { runtime, cast }));
         }
       }
       return true;
-    });
+    })
+    .catch(() => {}); // catch silently
