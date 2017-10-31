@@ -140,13 +140,13 @@ export const getFilm = id => (dispatch) => {
         const runtime = res.data.runtime;
         const cast = (res.data.credits && res.data.credits.cast) || [];
 
-        let directorArr = [];
+        let directorObj;
         if (res.data.credits && res.data.credits.crew) {
-          directorArr = res.data.credits.crew.filter(i => i.job === 'Director');
+          directorObj = res.data.credits.crew.find(i => i.job === 'Director');
         }
 
-        if (directorArr.length) {
-          const director = directorArr[0].name;
+        if (directorObj && directorObj.name) {
+          const director = directorObj.name;
           return searchByDirector(director)(dispatch)
             .then(() => {
               dispatch(setResultDetails(id, { runtime, cast, director }));
@@ -179,13 +179,13 @@ export const getFilmDetails = film => dispatch =>
         const cast = (res.data.credits && res.data.credits.cast) || [];
 
         if (!film.director) {
-          let directorArr = [];
+          let directorObj;
           if (res.data.credits && res.data.credits.crew) {
-            directorArr = res.data.credits.crew.filter(i => i.job === 'Director');
+            directorObj = res.data.credits.crew.find(i => i.job === 'Director');
           }
 
-          if (directorArr.length) { // some movies have no director
-            const director = directorArr[0].name;
+          if (directorObj && directorObj.name) { // some movies have no director
+            const director = directorObj.name;
 
             return searchByDirector(director)(dispatch)
               .then(() => {
