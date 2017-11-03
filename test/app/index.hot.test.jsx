@@ -1,6 +1,16 @@
 import React from 'react';
+import 'app';
+import { acceptMock } from 'app/moduleStub';
 
-jest.mock('app/moduleStub', () => module => module.hot = { accept: jest.fn() });
+jest.mock('app/moduleStub', () => {
+  const mock = jest.fn();
+  function stubMod(module) {
+    module.hot = { accept: mock };
+    return module;
+  }
+  stubMod.acceptMock = mock;
+  return stubMod;
+});
 
 jest.mock('react-hot-loader', () => ({
   AppContainer({ children }) {
@@ -12,7 +22,6 @@ jest.mock('react-redux', () => ({
   Provider({ children }) {
     return (<x-provider>{children}</x-provider>);
   },
-  connect: () => jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => ({
@@ -27,8 +36,11 @@ jest.mock('app/configureStore', () => jest.fn());
 
 describe('app/index', () => {
   it('should render successfully', () => {
-    require('app');
     expect(document.getElementById().innerHTML).toMatchSnapshot();
+  });
+
+  it('should call hot module accept method', () => {
+    expect(acceptMock).toBeCalled();
   });
 });
 

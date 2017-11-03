@@ -10,7 +10,6 @@ jest.mock('react-redux', () => ({
   Provider({ children }) {
     return (<x-provider>{children}</x-provider>);
   },
-  connect: () => jest.fn(),
 }));
 
 jest.mock('react-router-dom', () => ({
