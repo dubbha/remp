@@ -1,13 +1,13 @@
 import React from 'react';
-import 'app';
 import { acceptMock } from 'app/moduleStub';
+import 'app';
 
 jest.mock('app/moduleStub', () => {
   const mock = jest.fn();
-  function stubMod(module) {
+  const stubMod = (module) => {
     module.hot = { accept: mock };
     return module;
-  }
+  };
   stubMod.acceptMock = mock;
   return stubMod;
 });
@@ -40,7 +40,7 @@ describe('app/index', () => {
   });
 
   it('should call hot module accept method', () => {
-    expect(acceptMock).toBeCalled();
+    expect(acceptMock).toBeCalledWith('./App', expect.any(Function));
   });
 });
 
