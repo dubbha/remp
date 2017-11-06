@@ -8,7 +8,7 @@
     "build": "webpack --config webpack.config.prod.js",
     "prod": "node server",
     "start": "npm run prod",
-    "lint": "esw --ext .js --ext .jsx src/js",
+    "lint": "esw --ext .js --ext .jsx src/js test",
     "lint:watch": "npm run lint -- --watch",
     "lint:debug": "npm run lint -- --debug",
     "test": "jest",

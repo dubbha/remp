@@ -2,6 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const sharedConfig = require('./webpack.config.shared');
 
+// Make node env available for babel loader and other loaders
+// https://github.com/webpack/webpack/issues/2121#issuecomment-209630944
+process.env.NODE_ENV = 'development';
+
 module.exports = {
   devServer: {
     port: 3001,

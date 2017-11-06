@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const SearchButton = ({ onSearchClick }) => (
+const FilmButton = ({ onSearchClick }) => (
   <button
     className="film__button"
     onClick={onSearchClick}
@@ -10,8 +10,8 @@ const SearchButton = ({ onSearchClick }) => (
   </button>
 );
 
-SearchButton.propTypes = {
+FilmButton.propTypes = {
   onSearchClick: PropTypes.func.isRequired,
 };
 
-export default SearchButton;
+export default FilmButton;

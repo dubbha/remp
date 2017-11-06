@@ -12,7 +12,7 @@ const initialState = {
   isFilmLoading: false,
 };
 
-const searchReducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_QUERY:
       return {
@@ -53,12 +53,12 @@ const searchReducer = (state = initialState, action) => {
     case actionTypes.SET_IS_FILM_LOADING:
       return {
         ...state,
-        isLoading: action.isFilmLoading,
+        isFilmLoading: action.isFilmLoading,
       };
     default:
       return state;
   }
 };
 
-export default searchReducer;
+export default reducer;
 

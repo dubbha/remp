@@ -1,18 +1,44 @@
 {
-  "presets": [
-    ["env", {
-      "targets": {
-        "browsers": ["> 1%"]
-      },
-      "modules": false,
-      "useBuiltIns": true,
-      "debug": false
-    }],
-    "react"
-  ],
-  "plugins": [
-    "react-hot-loader/babel",
-    "transform-class-properties",
-    "transform-object-rest-spread"
-  ]
+  "env": {
+    "production": {
+      "plugins": [
+        "transform-class-properties",
+        "transform-object-rest-spread"
+      ],
+      "presets": [
+        ["env", {
+          "targets": {
+            "browsers": ["> 1%"]
+          },
+          "useBuiltIns": true,
+          "debug": true
+        }],
+        "react"
+      ]
+    },
+    "development": {
+      "plugins": [
+        "react-hot-loader/babel",
+        "transform-class-properties",
+        "transform-object-rest-spread"
+      ],
+      "presets": [
+        ["env", {
+          "modules": false,
+          "debug": true
+        }],
+        "react"
+      ]
+    },
+    "test": {
+      "presets": [
+        "env",
+        "react"
+      ],
+      "plugins": [
+        "transform-class-properties",
+        "transform-object-rest-spread"
+      ]
+    }
+  }
 }

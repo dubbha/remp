@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`app/App should render successfully 1`] = `
+<div
+  className="app"
+>
+  <Switch>
+    <Route
+      component={[Function]}
+      path="/search/:query?"
+    />
+    <Route
+      component={[Function]}
+      path="/film/:id/:title?"
+    />
+    <Redirect
+      from="/"
+      push={false}
+      to="/search"
+    />
+  </Switch>
+</div>
+`;

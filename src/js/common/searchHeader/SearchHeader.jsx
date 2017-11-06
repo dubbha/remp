@@ -5,7 +5,7 @@ import SearchToolbar from './searchToolbar';
 import ErrorBoundary from '../errorBoundary';
 import './style.sass';
 
-const Search = ({
+const SearchHeader = ({
   query,
   onSearch,
   onQueryChange,
@@ -41,11 +41,11 @@ const Search = ({
   </header>
 );
 
-Search.defaultProps = {
+SearchHeader.defaultProps = {
   query: '',
 };
 
-Search.propTypes = {
+SearchHeader.propTypes = {
   query: PropTypes.string,
   onSearch: PropTypes.func.isRequired,
   onQueryChange: PropTypes.func.isRequired,
@@ -54,4 +54,4 @@ Search.propTypes = {
   searchByParams: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
-export default Search;
+export default SearchHeader;

@@ -10,24 +10,25 @@ const SearchResult = ({
   onSortByChange,
   sortByParams,
 }) => (
-  results.length > 0 && (
-    <div className="searchResult">
-      <span className="searchResult__line">{`${results.length} movies found`}</span>
-      <span className="searchResult__line">
-        Sort by
-        {
-          sortByParams.map(item => (
-            <SearchSortByLink
-              key={item}
-              text={item}
-              active={sortBy === item}
-              onClickWithText={onSortByChange}
-            />
-          ))
-        }
-      </span>
-    </div>
-  )
+  results.length > 0
+    ? (
+      <div className="searchResult">
+        <span className="searchResult__line">{`${results.length} movies found`}</span>
+        <span className="searchResult__line">
+          Sort by
+          {
+            sortByParams.map(item => (
+              <SearchSortByLink
+                key={item}
+                text={item}
+                active={sortBy === item}
+                onClickWithText={onSortByChange}
+              />
+            ))
+          }
+        </span>
+      </div>
+    ) : null
 );
 
 SearchResult.defaultProps = {

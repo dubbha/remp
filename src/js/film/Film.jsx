@@ -98,18 +98,22 @@ export class Film extends Component {
 
     return (
       <div className="app__container">
-        { film && (
-          <FilmHeader
-            film={film}
-            onSearchClick={this.handleSearchClick}
-          />
-        )}
-        { film && !isFilmLoading && (
-          <Result
-            film={film}
-            results={filteredResults}
-          />
-        )}
+        {
+          film && (
+            <FilmHeader
+              film={film}
+              onSearchClick={this.handleSearchClick}
+            />
+          )
+        }
+        {
+          film && !isFilmLoading && (
+            <Result
+              film={film}
+              results={filteredResults}
+            />
+          )
+        }
         <List
           results={filteredResults}
           onSelectFilm={this.handleSelectFilm}

@@ -46,7 +46,7 @@ const paramsIdSelector = (state, props) => +props.match.params.id;
 
 export const filmSelector = createSelector(
   [resultsSelector, paramsIdSelector],
-  (results, id) => results && id && results.filter(item => item.id === id)[0],
+  (results, id) => results && id && results.find(item => item.id === id),
 );
 
 export const filteredResultsSelector = createSelector(
