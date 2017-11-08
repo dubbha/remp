@@ -18,8 +18,8 @@ const rules = [
       {
         loader: 'file-loader',
         query: { name: '[name].[ext]' },
-      }
-    ]
+      },
+    ],
   },
   {
     test: /\.(css|sass)$/,
@@ -28,8 +28,8 @@ const rules = [
       { loader: 'css-loader' },
       { loader: 'postcss-loader' },
       { loader: 'sass-loader' },
-    ]
-  }
+    ],
+  },
 ];
 
 

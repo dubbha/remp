@@ -15,6 +15,7 @@ function renderFullPage(html, preloadedState) {
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <title>React Mentoring Program</title>
+      <link rel="shortcut icon" href="/favicon.ico"></head>
     </head>
     <body>
       <div id="app">${html}</div>
@@ -22,6 +23,7 @@ function renderFullPage(html, preloadedState) {
         window.PRELOADED_STATE = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
       </script>
       <script src="/bundle.js"></script>
+      <img src="../../dist/bg.jpg" />
     </body>
   `;
 }

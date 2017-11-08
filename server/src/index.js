@@ -10,7 +10,7 @@ app.use((req, res, next) => { // https://enable-cors.org/server_expressjs.html
   next();
 });
 
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static(path.join(__dirname, '../../dist')));
 
 app.get('*', handleRender); // SPA default route
 
