@@ -1,5 +1,6 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import handleRender from './handleRender';
 
 const app = express();
 
@@ -11,9 +12,7 @@ app.use((req, res, next) => { // https://enable-cors.org/server_expressjs.html
 
 app.use(express.static(path.join(__dirname, '../dist')));
 
-app.get('*', (req, res) => { // SPA default route
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
-});
+app.get('*', handleRender); // SPA default route
 
 app.listen(3000, () => {
   console.log('listening on *:3000'); // eslint-disable-line no-console

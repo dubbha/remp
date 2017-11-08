@@ -13,8 +13,7 @@ npm run dev
 
 Run production server
 ```
-npm run build
-npm run prod
+npm run build && npm start
 ```
 
 Test coverage

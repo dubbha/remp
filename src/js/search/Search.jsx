@@ -35,6 +35,9 @@ export class Search extends Component {
     setSortBy: PropTypes.func.isRequired,
   };
 
+  static fetchData = (dispatch, match) =>
+    dispatch(this.props.searchByDirector(decodeURIComponent(match.params.query), this.props.sortBy));
+
   componentWillMount() {
     const {
       match: { params },
