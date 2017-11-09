@@ -1,5 +1,4 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const extensions = ['.js', '.json', '.jsx'];
 
@@ -13,7 +12,7 @@ const rules = [
     ],
   },
   {
-    test: /\.(ttf|eot|woff|svg|png|jpg)$/,
+    test: /\.(ttf|eot|woff|svg|png|jpg|ico)$/,
     use: [
       {
         loader: 'file-loader',
@@ -21,25 +20,10 @@ const rules = [
       },
     ],
   },
-  {
-    test: /\.(css|sass)$/,
-    use: [
-      { loader: 'style-loader' },
-      { loader: 'css-loader' },
-      { loader: 'postcss-loader' },
-      { loader: 'sass-loader' },
-    ],
-  },
 ];
 
 
-const plugins = [
-  new HtmlWebpackPlugin({
-    template: 'src/html/index.html',
-    inject: true,
-    favicon: 'src/img/favicon.ico',
-  }),
-];
+const plugins = [];
 
 module.exports = {
   extensions,

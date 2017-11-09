@@ -29,22 +29,12 @@ module.exports = {
         use: ['babel-loader'],
       },
       {
-        test: /\.(ttf|eot|woff|svg|png|jpg)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            query: { name: '[name].[ext]' },
-          },
-        ],
+        test: /\.(ttf|eot|woff|svg|png|jpg|ico)$/,
+        use: ['null-loader'],
       },
       {
         test: /\.(css|sass)$/,
-        use: [
-          { loader: 'isomorphic-style-loader' },
-          { loader: 'css-loader' },
-          { loader: 'postcss-loader' },
-          { loader: 'sass-loader' },
-        ],
+        use: ['null-loader'],
       },
     ],
   },

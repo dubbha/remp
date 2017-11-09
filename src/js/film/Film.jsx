@@ -36,7 +36,7 @@ export class Film extends Component {
   };
 
   static fetchData = (dispatch, match) =>
-    dispatch(this.props.getFilm(match.params.id));
+    dispatch(actions.getFilm(match.params.id));
 
   componentWillMount = () => {
     const {

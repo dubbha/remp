@@ -9,13 +9,13 @@ import configureStore from '../../src/js/app/configureStore';
 import App from '../../src/js/app/App';
 
 function renderFullPage(html, preloadedState) {
-  return `
-    <!DOCTYPE html>
+  return `<!DOCTYPE html>
     <head lang="en">
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <title>React Mentoring Program</title>
-      <link rel="shortcut icon" href="/favicon.ico"></head>
+      <link rel="stylesheet" href="/style.css">
+      <link rel="shortcut icon" href="/favicon.ico">
     </head>
     <body>
       <div id="app">${html}</div>
@@ -23,7 +23,6 @@ function renderFullPage(html, preloadedState) {
         window.PRELOADED_STATE = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
       </script>
       <script src="/bundle.js"></script>
-      <img src="../../dist/bg.jpg" />
     </body>
   `;
 }

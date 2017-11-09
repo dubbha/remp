@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const sharedConfig = require('./webpack.config.shared');
 
 // Make node env available for babel loader and other loaders
@@ -22,7 +23,20 @@ module.exports = {
     extensions: sharedConfig.extensions,
   },
   module: {
-    rules: sharedConfig.rules,
+    rules: [
+      {
+        test: /\.(css|sass)$/,
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: [
+            { loader: 'css-loader', options: { sourceMap: true, minimize: true } },
+            { loader: 'postcss-loader', options: { sourceMap: true } },
+            { loader: 'sass-loader', options: { sourceMap: true } },
+          ],
+        }),
+      },
+      ...sharedConfig.rules,
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -31,10 +45,7 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['common'],
-      minChunks: 2,
-    }),
+    new ExtractTextPlugin('style.css'),
     ...sharedConfig.plugins,
   ],
   devtool: 'cheap-module-source-map',
