@@ -19,9 +19,9 @@ npm run build && npm start
 Test coverage
 ```
 Test Suites: 30 passed, 30 total
-Tests:       169 passed, 169 total
+Tests:       174 passed, 174 total
 Snapshots:   36 passed, 36 total
-Time:        6.82s
+Time:        6.938s
 Ran all test suites.
 -----------------------------------|----------|----------|----------|----------|----------------|
 File                               |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
@@ -32,6 +32,7 @@ All files                          |      100 |      100 |      100 |      100 |
   configureStore.js                |      100 |      100 |      100 |      100 |                |
   index.jsx                        |      100 |      100 |      100 |      100 |                |
   moduleStub.js                    |      100 |      100 |      100 |      100 |                |
+  routes.js                        |      100 |      100 |      100 |      100 |                |
  common/config                     |      100 |      100 |      100 |      100 |                |
   api.config.js                    |      100 |      100 |      100 |      100 |                |
  common/errorBoundary              |      100 |      100 |      100 |      100 |                |

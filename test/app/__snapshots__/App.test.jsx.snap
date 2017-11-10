@@ -5,19 +5,24 @@ exports[`app/App should render successfully 1`] = `
   className="app"
 >
   <Switch>
-    <Route
-      component={[Function]}
-      path="/search/:query?"
-    />
-    <Route
-      component={[Function]}
-      path="/film/:id/:title?"
-    />
-    <Redirect
-      from="/"
-      push={false}
-      to="/search"
-    />
+    <Switch>
+      <Route
+        key="0"
+        path="/search/:query?"
+        render={[Function]}
+      />
+      <Route
+        key="1"
+        path="/film/:id/:title?"
+        render={[Function]}
+      />
+      <Route
+        exact={true}
+        key="2"
+        path="/"
+        render={[Function]}
+      />
+    </Switch>
   </Switch>
 </div>
 `;

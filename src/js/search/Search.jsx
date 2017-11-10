@@ -35,8 +35,14 @@ export class Search extends Component {
     setSortBy: PropTypes.func.isRequired,
   };
 
-  static fetchData = (dispatch, match) =>
-    dispatch(actions.searchByDirector(decodeURIComponent(match.params.query)));
+  static fetchData = (dispatch, match) => {
+    if (match.params.query) {
+      const paramsQuery = decodeURIComponent(match.params.query);
+      dispatch(actions.setQuery(paramsQuery));
+      return dispatch(actions.searchByDirector(paramsQuery));
+    }
+    return Promise.resolve();
+  }
 
   componentWillMount() {
     const {

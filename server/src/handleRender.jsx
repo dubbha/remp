@@ -10,21 +10,23 @@ import App from '../../src/js/app/App';
 
 function renderFullPage(html, preloadedState) {
   return `<!DOCTYPE html>
-    <head lang="en">
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-      <title>React Mentoring Program</title>
-      <link rel="stylesheet" href="/style.css">
-      <link rel="shortcut icon" href="/favicon.ico">
-    </head>
-    <body>
-      <div id="app">${html}</div>
-      <script>
-        window.PRELOADED_STATE = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
-      </script>
-      <script src="/bundle.js"></script>
-    </body>
-  `;
+<html>
+  <head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>React Mentoring Program</title>
+    <link rel="stylesheet" href="/style.css">
+    <link rel="shortcut icon" href="/favicon.ico">
+  </head>
+  <body>
+    <div id="app">${html}</div>
+    <script>
+      window.PRELOADED_STATE = ${JSON.stringify(preloadedState).replace(/</g, '\\u003c')}
+    </script>
+    <script src="/bundle.js"></script>
+  </body>
+</html>
+`;
 }
 
 function handleRender(req, res) {

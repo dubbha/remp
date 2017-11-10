@@ -3,9 +3,7 @@ import thunk from 'redux-thunk';
 import { devToolsEnhancer } from 'redux-devtools-extension/logOnlyInProduction';
 import rootReducer from './rootReducer';
 
-const initialState = {};
-
-export default () => {
+export default (initialState = {}) => {
   const store = createStore(
     rootReducer,
     initialState,

@@ -18,6 +18,11 @@ jest.mock('common/store/selectors', () => ({
   isLoadingSelector: jest.fn(state => state.isLoading),
 }));
 
+jest.mock('common/store/actions', () => ({
+  setQuery: jest.fn(query => `setQuery action for ${query}`),
+  searchByDirector: jest.fn(query => `searchByDirector action for ${query}`),
+}));
+
 describe('Search', () => {
   describe('react-redux connector', () => {
     it('should map state to props', () => {
@@ -316,6 +321,39 @@ describe('Search', () => {
       wrapper.find('Result').simulate('sortByChange', 'NEW_SORT_BY');
 
       expect(props.setResults).toBeCalledWith(props.results, 'NEW_SORT_BY');
+    });
+  });
+
+  describe('fetchData static method', () => {
+    let match;
+    let dispatch;
+
+    beforeEach(() => {
+      match = { params: { query: 'QUERY' } };
+      dispatch = jest.fn();
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should set query on server-side rendering', () => {
+      Search.fetchData(dispatch, match);
+
+      expect(dispatch).toBeCalledWith('setQuery action for QUERY');
+    });
+
+    it('should search by director on server-side rendering', () => {
+      Search.fetchData(dispatch, match);
+
+      expect(dispatch).toBeCalledWith('searchByDirector action for QUERY');
+    });
+
+    it('should not dispatch if query is empty on server-side rendering', () => {
+      match.params.query = '';
+      Search.fetchData(dispatch, match);
+
+      expect(dispatch).not.toBeCalled();
     });
   });
 });
