@@ -35,7 +35,10 @@ export class Film extends Component {
     isFilmLoading: PropTypes.bool.isRequired,
   };
 
-  componentWillMount() {
+  static fetchData = (dispatch, match) =>
+    dispatch(actions.getFilm(match.params.id));
+
+  componentWillMount = () => {
     const {
       match: { params },
       film,

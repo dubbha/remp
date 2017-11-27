@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const sharedConfig = require('./webpack.config.shared');
 
 // Make node env available for babel loader and other loaders
@@ -31,13 +32,24 @@ module.exports = {
     extensions: sharedConfig.extensions,
   },
   module: {
-    rules: sharedConfig.rules,
+    rules: [
+      {
+        test: /\.(css|sass)$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
+      },
+      ...sharedConfig.rules,
+    ],
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'),
+    }),
+    new HtmlWebpackPlugin({
+      template: 'src/html/index.html',
+      inject: true,
+      favicon: 'src/img/favicon.ico',
     }),
     ...sharedConfig.plugins,
   ],

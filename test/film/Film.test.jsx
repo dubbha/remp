@@ -15,6 +15,10 @@ jest.mock('common/store/selectors', () => ({
   isFilmLoadingSelector: jest.fn(state => state.isFilmLoading),
 }));
 
+jest.mock('common/store/actions', () => ({
+  getFilm: jest.fn(id => `film with id ${id}`),
+}));
+
 describe('Film', () => {
   describe('react-redux connector', () => {
     it('should map state to props', () => {
@@ -299,6 +303,17 @@ describe('Film', () => {
       wrapper.find('FilmHeader').simulate('searchClick');
 
       expect(props.history.push).toBeCalledWith('/search');
+    });
+  });
+
+  describe('fetchData static method', () => {
+    it('should dispatch an action required for server-side rendering data pre-fetch', () => {
+      const match = { params: { id: '1' } };
+      const dispatch = jest.fn();
+
+      Film.fetchData(dispatch, match);
+
+      expect(dispatch).toBeCalledWith('film with id 1');
     });
   });
 });

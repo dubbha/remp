@@ -1,15 +1,13 @@
 import React from 'react';
-import { Route, Switch, Redirect } from 'react-router-dom';
-import Search from '../search';
-import Film from '../film';
+import { Switch } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
+import routes from './routes';
 import './style.sass';
 
 const App = () => (
   <div className="app">
     <Switch>
-      <Route path="/search/:query?" component={Search} />
-      <Route path="/film/:id/:title?" component={Film} />
-      <Redirect from="/" to="/search" />
+      {renderRoutes(routes)}
     </Switch>
   </div>
 );
